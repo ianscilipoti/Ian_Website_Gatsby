@@ -1,0 +1,60 @@
+.page
+{
+    /* background-image: url("pepper.png"); */
+    width: 100%;
+    height: calc(100vh - 70px);
+    position:absolute;
+    // opacity: 80%;
+    color: white;
+}
+
+.pageContent
+{
+    position: absolute;
+    z-index: 20;
+    
+    width:calc(100% - 50);
+    max-width: 650px;
+    min-height: 200px;
+
+    margin-left: auto;  
+    margin-right: auto; 
+    left: 0; 
+    right: 0; 
+    top:100px; 
+
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.pageBadge {
+    /* background-color: rgba(255, 255, 255, 0.6); */
+    padding:5px 15px;
+    // color:white;
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: 10px;
+    display:block;
+    text-align: center;
+}
+
+a 
+{
+    color:white;
+}
+
+.pageBody
+{
+    /* width:450px; */
+    /* background-color: rgba(255, 255, 255, 0.6); */
+    min-height: 200px;
+    
+    // color:white;
+    padding:15px;
+    left: 0; 
+    right: 0; 
+    top:400px;
+    margin-left: auto; 
+    margin-right: auto; 
+    line-height:190%;
+}

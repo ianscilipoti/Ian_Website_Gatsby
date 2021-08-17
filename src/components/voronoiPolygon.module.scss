@@ -1,0 +1,15 @@
+.svgVoronoi {
+    height:calc(100vh - 70px);
+    min-height: 750px;
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    overflow:visible;
+    pointer-events: none;
+}
+
+.polygon {
+    stroke-width:1;
+    stroke:rgb(0, 0, 0);
+    pointer-events: all;
+}

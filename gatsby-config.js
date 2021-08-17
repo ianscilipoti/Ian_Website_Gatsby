@@ -6,5 +6,13 @@
 
 module.exports = {
   /* Your site config here */
-  plugins: [],
+  plugins: [
+    `gatsby-plugin-sass`,
+    {
+      resolve: `gatsby-plugin-layout`,
+      options: {
+        component: require.resolve(`./src/components/layout.js`),
+      },
+    },
+  ],
 }
