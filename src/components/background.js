@@ -69,6 +69,7 @@ const Background1 = (props) =>
 
     const location = useLocation()
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
+    const [dimensions, setDimensions] = React.useState({height: window.innerHeight, width: window.innerWidth})
     const voronoiObj = useRef(new Voronoi());
     let diagram = useRef(voronoiObj.current.compute(voronoiPositions, bbox));
     
@@ -76,6 +77,20 @@ const Background1 = (props) =>
     let desiredVoronoiPositions = useRef(voronoiAreas.map(area => ({x: area.x, y: area.y})));
     let isAnimating = useRef(false);
     let animationRequestRef = useRef();
+
+    React.useEffect(() => {
+        function handleResize() {
+        setDimensions({
+            height: window.innerHeight,
+            width: window.innerWidth
+        })
+        }
+        window.addEventListener('resize', handleResize)
+
+        return _ => {
+            window.removeEventListener('resize', handleResize)
+        }
+    })
 
     useEffect(() => {
         //get the goal position of each voronoi polygon based on the current page directory
@@ -217,15 +232,15 @@ const Background1 = (props) =>
         function voronoiCoordToPixelX (x)
         {
 
-            let pageHeightMinusHeader = window.innerHeight - headerHeightPx;//height of viewbox in pixels
-            let extraSideSpace = (window.innerWidth - pageHeightMinusHeader)/2;//this much space on either side of viewbox
+            let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
+            let extraSideSpace = (dimensions.width - pageHeightMinusHeader)/2;//this much space on either side of viewbox
             return (x / boundingBoxSize) * pageHeightMinusHeader + extraSideSpace;
         }
 
         function voronoiCoordToPixelY (y)
         {
 
-            let pageHeightMinusHeader = window.innerHeight - headerHeightPx;//height of viewbox in pixels
+            let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
             return (y / boundingBoxSize) * pageHeightMinusHeader;
         }
 
