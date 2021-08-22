@@ -10,7 +10,6 @@ const Layout = ({ children, location }) => {
         <Background>
             {(voronoiClipData) => 
                 <Transition location={location}>
-                    {/* {children} */}
                     {React.cloneElement(children, {voronoiClipData: voronoiClipData})}
                 </Transition>
             }

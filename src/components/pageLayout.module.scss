@@ -4,8 +4,12 @@
     width: 100%;
     height: calc(100vh - 70px);
     position:absolute;
-    // opacity: 80%;
     color: white;
+}
+
+h1.pageBadge
+{
+    font-size: 250%;
 }
 
 .pageContent
@@ -14,14 +18,14 @@
     z-index: 20;
     
     width:calc(100% - 50);
-    max-width: 650px;
+    // max-width: 650px;
     min-height: 200px;
 
     margin-left: auto;  
     margin-right: auto; 
     left: 0; 
     right: 0; 
-    top:100px; 
+    top:20px; 
 
     text-align: justify;
     text-justify: inter-word;

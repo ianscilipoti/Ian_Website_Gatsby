@@ -26,7 +26,8 @@ const voronoiAreas = [
         url: "/projects",
         x:40, 
         y:10,
-        color: "#4d3c99",
+        // color: "#4d3c99",
+        color: "#c5e1e8",
         selectedHighlightMovementOverride:120
     },
     {
@@ -34,7 +35,7 @@ const voronoiAreas = [
         x:48, 
         y:70,
         url: "/blog",
-        color: "#114e5c",
+        color: "#114e5c"
     },
     {
         identifier: "bg1", 
@@ -61,7 +62,7 @@ const boundingBoxSize = 100;
 const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 100;
-const animationCutoff = 0.05;
+const animationCutoff = 0.3;
 const dampening = 15.0;
 
 const Background1 = (props) =>
@@ -69,7 +70,13 @@ const Background1 = (props) =>
 
     const location = useLocation()
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
-    const [dimensions, setDimensions] = React.useState({height: window.innerHeight, width: window.innerWidth})
+    const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
+        {
+            height: window.innerHeight, 
+            width: window.innerWidth} : 
+        {
+            height: 0, 
+            width: 0})
     const voronoiObj = useRef(new Voronoi());
     let diagram = useRef(voronoiObj.current.compute(voronoiPositions, bbox));
     
@@ -139,7 +146,7 @@ const Background1 = (props) =>
             for(let i = 0; i < voronoiAreas.length; i ++)
             {
                 const voronoiArea = voronoiAreas[i];
-                if (voronoiArea.hasOwnProperty('url') && voronoiArea.url === location.pathname)
+                if (voronoiArea.hasOwnProperty('url') && voronoiArea.url.split('/')[1] === location.pathname.split('/')[1])
                 {
                     return i;
                 } 
@@ -253,7 +260,13 @@ const Background1 = (props) =>
                 let polygonPoints = cell.halfedges.map(halfEdge => {return `${voronoiCoordToPixelX(halfEdge.getStartpoint().x)}px ${voronoiCoordToPixelY(halfEdge.getStartpoint().y)}px`}).join(', ');
                 polygonsClippingData[cell.site.identifier] = polygonPoints;
             }
+            else 
+            {
+                //if there are 0 points then define an arbitrary offscreen polygon to ensure the window doesn't get rendered
+                polygonsClippingData[cell.site.identifier] = '0px 0px, -1px -1px, -1px 0px';
+            }
         }
+
         return polygonsClippingData;
     }
 

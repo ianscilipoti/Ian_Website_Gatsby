@@ -1,5 +1,7 @@
 import React from "react"
 import PageLayout from '../components/pageLayout'
+import '../styles/common.module.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const IndexPage = (props) => {
   return <PageLayout pageName="WELCOME" pageIdentifier="about" voronoiClipData={props.voronoiClipData}>

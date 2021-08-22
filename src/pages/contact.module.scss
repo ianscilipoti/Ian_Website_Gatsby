@@ -1,19 +1,11 @@
 .emailButton
 {
-    background-color: rgb(26, 26, 26);
-    color:white;
-    border:0px;
+    border-radius: 5px;
+    position: absolute;
+    transform:translateX(-50%);
+    left: 50%;
+    position:absolute;
     padding:15px;
     font-size:large;
     border-radius: 5px;
-    left:50%;
-    position: absolute;
-    transform:translateX(-50%);
-    text-decoration: none;
-    
-}
-
-.emailButton:active
-{
-    background-color: black;
 }

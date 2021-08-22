@@ -1,8 +1,10 @@
 import React from "react"
+import PageLayout from '../components/pageLayout'
 
-const BlogPage = () => {
-  return <div>
-  </div>
+const BlogPage = (props) => {
+  return <PageLayout pageName="BLOG" pageIdentifier="blog" voronoiClipData={props.voronoiClipData}>
+      LISTEN
+  </PageLayout>
 }
 
-export default BlogPage
+export default BlogPage 
