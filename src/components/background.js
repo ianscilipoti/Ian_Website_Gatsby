@@ -62,8 +62,8 @@ const boundingBoxSize = 100;
 const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 100;
-const animationCutoff = 0.3;
-const dampening = 15.0;
+const animationCutoff = 0.003;
+const dampening = 20.0;
 
 const Background1 = (props) =>
 {

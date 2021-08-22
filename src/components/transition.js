@@ -4,7 +4,7 @@ import {
   Transition as ReactTransition,
 } from "react-transition-group"
 
-const timeout = 150
+const timeout = 1500
 const getTransitionStyles = {
   entering: {
     position: `absolute`,
@@ -25,13 +25,26 @@ const getTransitionStyles = {
   },
 }
 
+const PassVoronoiDataWrapper = (props) => (
+  <ReactTransition {...props}>
+    {state => (
+      <div style={{
+        ...getTransitionStyles[state]
+      }}>
+        {React.cloneElement(props.children, {voronoiClipData: props.voronoiClipData})}
+        {/* {props.children} */}
+      </div>
+    )}
+  </ReactTransition>
+);
+
 class Transition extends React.PureComponent {
   render() {
-    const { children, location } = this.props
+    const { children, location, voronoiClipData } = this.props
 
     return (
-      <TransitionGroup>
-        <ReactTransition
+      <TransitionGroup component={null} childFactory={(child) => React.cloneElement(child, {voronoiClipData: voronoiClipData})}>
+        {/* <ReactTransition //onExiting={()=>{debugger;}}
           key={location.pathname}
           timeout={{
             enter: timeout,
@@ -47,7 +60,17 @@ class Transition extends React.PureComponent {
               {children}
             </div>
           )}
-        </ReactTransition>
+        </ReactTransition> */}
+
+        <PassVoronoiDataWrapper 
+        key={location.pathname}
+        timeout={{
+          enter: timeout,
+          exit: timeout,
+        }}
+        >
+          {children}
+        </PassVoronoiDataWrapper>
       </TransitionGroup>
     )
   }
