@@ -2,14 +2,16 @@
 {
     /* background-image: url("pepper.png"); */
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 60px);
     position:absolute;
-    color: white;
+    // color: black;
+    // font-weight: 1000;
+    
 }
 
 h1.pageBadge
 {
-    font-size: 250%;
+    font-size: 300%;
 }
 
 .pageContent
@@ -29,6 +31,8 @@ h1.pageBadge
 
     text-align: justify;
     text-justify: inter-word;
+
+    
 }
 
 .pageBadge {

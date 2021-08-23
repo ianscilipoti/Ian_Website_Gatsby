@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef} from 'react'
 import { useLocation } from "@reach/router"
 import Voronoi from 'voronoi'
 import VoronoiPolygon from './voronoiPolygon'
-import {voronoiBackground} from './background.module.scss'
+import {voronoiBackground, voronoiForeground} from './background.module.scss'
 
 const voronoiAreas = [
     {
@@ -10,7 +10,8 @@ const voronoiAreas = [
         url: "/",
         x:15, 
         y:40,
-        color: "#2c4d8f",
+        // color: "#2c4d8f",
+        color: "#ccdebd",
         selectedHighlightMovementOverride:80
     }, 
     {
@@ -39,8 +40,8 @@ const voronoiAreas = [
     },
     {
         identifier: "bg1", 
-        x:120, 
-        y:60,
+        x:100, 
+        y:70,
         color: "#1a3824",
     },
     {
@@ -62,8 +63,8 @@ const boundingBoxSize = 100;
 const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 100;
-const animationCutoff = 0.003;
-const dampening = 20.0;
+const animationCutoff = 0.3;
+const dampening = 5.0;
 
 const Background1 = (props) =>
 {
@@ -235,7 +236,7 @@ const Background1 = (props) =>
     //don't call without calling recalculateDiagram first!
     const getPolygonClippingData = () =>
     {
-        const headerHeightPx = 70;
+        const headerHeightPx = 56;
         function voronoiCoordToPixelX (x)
         {
 
@@ -272,11 +273,18 @@ const Background1 = (props) =>
 
     return <React.Fragment>
         {recalculateDiagram()}
+
         <div className={voronoiBackground}>
             {getPolygonsData().map((polygonData, i) => 
-                <VoronoiPolygon key={i} id={i} color={polygonData.color} position={polygonData.position} points={polygonData.points}/>
-            )};
+                <VoronoiPolygon key={i} id={i} fill={true} color={polygonData.color} position={polygonData.position} points={polygonData.points}/>
+            )}
         </div>
+        {/* this just renders the strokes above everything else to ensure borders
+        <div className={voronoiForeground}>
+            {getPolygonsData().map((polygonData, i) => 
+                <VoronoiPolygon key={i} id={i} fill={false} position={polygonData.position} points={polygonData.points}/>
+            )}
+        </div> */}
         {/* pass the cells down to be used for clipping / animations */}
         {props.children(getPolygonClippingData())}
     </React.Fragment>

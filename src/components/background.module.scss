@@ -2,7 +2,15 @@
 .voronoiBackground
 {
     position: absolute;
-    top: 70px;
+    top: 56px;
     left: 50%;
     z-index: -3;
+}
+
+.voronoiForeground
+{
+    position: absolute;
+    top: 56px;
+    left: 50%;
+    z-index: 50;
 }

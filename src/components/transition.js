@@ -4,14 +4,16 @@ import {
   Transition as ReactTransition,
 } from "react-transition-group"
 
-const timeout = 1500
+const timeout = 300
+const delay = 150
 const getTransitionStyles = {
   entering: {
     position: `absolute`,
     width: '100%',
-    opacity: 1,
+    opacity: 0,
   },
   entered: {
+    transitionDelay: `${delay}ms`,
     transition: `opacity ${timeout}ms ease-in-out`,
     position: `absolute`,
     width: '100%',
@@ -26,11 +28,10 @@ const getTransitionStyles = {
 }
 
 const PassVoronoiDataWrapper = (props) => (
-  <ReactTransition {...props}>
+  <ReactTransition {...props} mountOnEnter={true}>
     {state => (
-      <div style={{
-        ...getTransitionStyles[state]
-      }}>
+      <div
+         style={{...getTransitionStyles[state]}}>
         {React.cloneElement(props.children, {voronoiClipData: props.voronoiClipData})}
         {/* {props.children} */}
       </div>
@@ -44,29 +45,11 @@ class Transition extends React.PureComponent {
 
     return (
       <TransitionGroup component={null} childFactory={(child) => React.cloneElement(child, {voronoiClipData: voronoiClipData})}>
-        {/* <ReactTransition //onExiting={()=>{debugger;}}
-          key={location.pathname}
-          timeout={{
-            enter: timeout,
-            exit: timeout,
-          }}
-        >
-          {status => (
-            <div
-              style={{
-                ...getTransitionStyles[status],
-              }}
-            >
-              {children}
-            </div>
-          )}
-        </ReactTransition> */}
-
         <PassVoronoiDataWrapper 
         key={location.pathname}
         timeout={{
-          enter: timeout,
-          exit: timeout,
+          enter: (timeout+delay),
+          exit: (timeout),
         }}
         >
           {children}

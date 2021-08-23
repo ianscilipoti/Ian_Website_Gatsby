@@ -2,7 +2,8 @@ import React from 'react'
 import {page, pageContent, pageBadge, pageBody} from './pageLayout.module.scss'
 
 const pageLayout = (props) => {
-    return <div className={page} style={{"clipPath": `polygon(${props.voronoiClipData[props.pageIdentifier]})`, "WebkitClipPath":`polygon(${props.voronoiClipData[props.pageIdentifier]})`}}>
+    const polygonStr = `polygon(${props.voronoiClipData[props.pageIdentifier]})`;
+    return <div className={page} style={{"clipPath": polygonStr, "WebkitClipPath":polygonStr, color:props.textColor}}>
         <div className={pageContent} style={{maxWidth:`${props.contentWidth}px`}}>
             <h1 className={pageBadge}>
                 {props.pageName}
@@ -15,6 +16,6 @@ const pageLayout = (props) => {
     </div>
 }
 
-pageLayout.defaultProps = { contentWidth: 650};
+pageLayout.defaultProps = { contentWidth: 650, textColor:"black"};
 
 export default pageLayout
