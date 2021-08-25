@@ -5,7 +5,7 @@ import {
 } from "react-transition-group"
 
 const timeout = 300
-const delay = 150
+const delay = 100
 const getTransitionStyles = {
   entering: {
     position: `absolute`,
@@ -13,8 +13,8 @@ const getTransitionStyles = {
     opacity: 0,
   },
   entered: {
-    transitionDelay: `${delay}ms`,
-    transition: `opacity ${timeout}ms ease-in-out`,
+    // transitionDelay: `${delay}ms`,
+    transition: `opacity ${timeout}ms ease-in-out ${delay}ms`,
     position: `absolute`,
     width: '100%',
     opacity: 1,

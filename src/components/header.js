@@ -1,13 +1,26 @@
 import React from 'react'
-import { Link } from 'gatsby'
-import {logoText} from './header.module.scss'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import Container from 'react-bootstrap/Container'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
 const Header = () => {
-    return <Navbar collapseOnSelect="true" style={{backgroundColor:"black"}} variant="dark">
+    const pagesQuery = useStaticQuery(graphql`
+    query {
+        allMarkdownRemark {
+            edges {
+                node {
+                    fields {
+                        directory
+                        slug
+                    }
+                }
+            }
+        }
+    }`)
+    return <Navbar collapseOnSelect="true"  bg="dark" variant="dark">
+        {/* style={{backgroundColor:"black"}} */}
         <Container>
             <Link className="navbar-brand" to="/">IAN SCILIPOTI</Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -15,17 +28,20 @@ const Header = () => {
             <Nav className="ms-auto">
             <Link className="nav-link" to="/">about</Link>
                 <Link className="nav-link" to="/contact">contact</Link>
-                <Link className="nav-link" to="/projects">projects</Link>
+                {/* <Link className="nav-link" to="/projects">projects</Link> */}
+                <NavDropdown title="projects" id="collasible-nav-dropdown">
+                    <NavDropdown.Item><Link className="dropdown-item" to="/projects">
+                        all
+                    </Link></NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    {pagesQuery.allMarkdownRemark.edges.map(edge => <NavDropdown.Item><Link className="dropdown-item" to={`/projects/${edge.node.fields.slug}`}>
+                        {edge.node.fields.slug}
+                    </Link></NavDropdown.Item>)}
+                </NavDropdown>
                 <Link className="nav-link" to="/blog">blog</Link>
                 
                 
-                {/* <NavDropdown title="Dropdown" id="collasible-nav-dropdown">
-                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-                </NavDropdown> */}
+                
             </Nav>
             </Navbar.Collapse>
         </Container>

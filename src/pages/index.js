@@ -4,7 +4,7 @@ import '../styles/common.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const IndexPage = (props) => {
-  return <PageLayout pageName="WELCOME" pageIdentifier="about" voronoiClipData={props.voronoiClipData}>
+  return <PageLayout pageName="WELCOME" voronoiClipData={props.voronoiClipData["/"]}>
       <p>
         I am a developer/hobbiest/artistically inclined person located in upstate New York. This websites serves as a 
         hub for all things I do including blog posts about my process as well as project showcases. 

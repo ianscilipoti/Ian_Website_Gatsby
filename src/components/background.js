@@ -2,74 +2,61 @@ import React, { useEffect, useState, useRef} from 'react'
 import { useLocation } from "@reach/router"
 import Voronoi from 'voronoi'
 import VoronoiPolygon from './voronoiPolygon'
-import {voronoiBackground, voronoiForeground} from './background.module.scss'
-
-const voronoiAreas = [
-    {
-        identifier: "about", 
-        url: "/",
-        x:15, 
-        y:40,
-        // color: "#2c4d8f",
-        color: "#ccdebd",
-        selectedHighlightMovementOverride:80
-    }, 
-    {
-        identifier: "contact", 
-        url: "/contact",
-        x:80,
-        y:55,
-        color: "#24736b",
-        selectedHighlightMovementOverride:70
-    }, 
-    {
-        identifier: "projects", 
-        url: "/projects",
-        x:40, 
-        y:10,
-        // color: "#4d3c99",
-        color: "#c5e1e8",
-        selectedHighlightMovementOverride:120
-    },
-    {
-        identifier: "blog", 
-        x:48, 
-        y:70,
-        url: "/blog",
-        color: "#114e5c"
-    },
-    {
-        identifier: "bg1", 
-        x:100, 
-        y:70,
-        color: "#1a3824",
-    },
-    {
-        identifier: "bg2", 
-        x:120, 
-        y:30,
-        color: "#21254a",
-    },
-    {
-        identifier: "bg3", 
-        x:5, 
-        y:35,
-        color: "#252652",
-    }
-];
+import {voronoiBackground} from './background.module.scss'
+import { useStaticQuery, graphql } from 'gatsby'
 
 //consts
 const boundingBoxSize = 100;
 const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
-const selectedHighlightMovement = 100;
+const selectedHighlightMovement = 120;
 const animationCutoff = 0.3;
-const dampening = 5.0;
+const dampening = 9.0;
 
 const Background1 = (props) =>
 {
 
+    const voronoiInfoQuery = useStaticQuery(graphql`
+    query {
+        allSite {
+            edges {
+                node {
+                    siteMetadata {
+                        pageVoronoiData {
+                            y
+                            x
+                            url
+                            selectedHighlightMovementOverride
+                            color
+                            globalOffset {
+                                x,
+                                y
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        allMarkdownRemark {
+            edges {
+                node {
+                    frontmatter {
+                        x
+                        y
+                        color
+                    }
+                    fields {
+                        directory
+                        slug
+                    }
+                }
+            }
+        }
+    }`)
     const location = useLocation()
+    const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData.concat(
+        voronoiInfoQuery.allMarkdownRemark.edges.map(edge => ({...edge.node.frontmatter, url:`/${edge.node.fields.directory}/${edge.node.fields.slug}`}))
+    )
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
     const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
         {
@@ -85,7 +72,6 @@ const Background1 = (props) =>
     let desiredVoronoiPositions = useRef(voronoiAreas.map(area => ({x: area.x, y: area.y})));
     let isAnimating = useRef(false);
     let animationRequestRef = useRef();
-
     React.useEffect(() => {
         function handleResize() {
         setDimensions({
@@ -106,14 +92,23 @@ const Background1 = (props) =>
         {
             const currentPageVoronoiIndex = getVoronoiAreaIndex();
             const currentPageVoronoiPos = voronoiAreas[currentPageVoronoiIndex];
-
             //how much does being visiting this page cause other page polygons to move
-            let siteOffset = selectedHighlightMovement;
+            let nonHighlightedSiteOffset = selectedHighlightMovement;
 
-            if (voronoiAreas[currentPageVoronoiIndex].hasOwnProperty('selectedHighlightMovementOverride'))
+            if (voronoiAreas[currentPageVoronoiIndex].hasOwnProperty("selectedHighlightMovementOverride") && voronoiAreas[currentPageVoronoiIndex].selectedHighlightMovementOverride !== null)
             {
-                siteOffset = voronoiAreas[currentPageVoronoiIndex].selectedHighlightMovementOverride;
+                nonHighlightedSiteOffset = voronoiAreas[currentPageVoronoiIndex].selectedHighlightMovementOverride;
             }
+
+            let globalOffsetX = 0;
+            let globalOffsetY = 0;
+
+            if (voronoiAreas[currentPageVoronoiIndex].hasOwnProperty("globalOffset") && voronoiAreas[currentPageVoronoiIndex].globalOffset !== null)
+            {
+                globalOffsetX = voronoiAreas[currentPageVoronoiIndex].globalOffset.x;
+                globalOffsetY = voronoiAreas[currentPageVoronoiIndex].globalOffset.y;
+            }
+
             const newDesiredPositions = [];
             for (let i = 0; i < voronoiAreas.length; i ++)
             {
@@ -127,17 +122,18 @@ const Background1 = (props) =>
                     directionToHoveredSiteX /= vectorMagnitude;
                     directionToHoveredSiteY /= vectorMagnitude;
                     newDesiredPositions.push({
-                        x: voronoiAreas[i].x - directionToHoveredSiteX * siteOffset,
-                        y: voronoiAreas[i].y - directionToHoveredSiteY * siteOffset});
+                        x: voronoiAreas[i].x - directionToHoveredSiteX * nonHighlightedSiteOffset + globalOffsetX,
+                        y: voronoiAreas[i].y - directionToHoveredSiteY * nonHighlightedSiteOffset + globalOffsetY});
                 }
                 else
                 {
                     newDesiredPositions.push({
-                        x: boundingBoxSize/2,
-                        y: boundingBoxSize/2
+                        x: boundingBoxSize/2 + globalOffsetX,
+                        y: boundingBoxSize/2 + globalOffsetY
                     });
                 }
             }
+            
             desiredVoronoiPositions.current = newDesiredPositions;
         }
 
@@ -147,7 +143,8 @@ const Background1 = (props) =>
             for(let i = 0; i < voronoiAreas.length; i ++)
             {
                 const voronoiArea = voronoiAreas[i];
-                if (voronoiArea.hasOwnProperty('url') && voronoiArea.url.split('/')[1] === location.pathname.split('/')[1])
+                const safePathname = location.pathname.substr(-1) === "/" ? location.pathname.slice(0, -1) : location.pathname;
+                if (voronoiArea.hasOwnProperty('url') && voronoiArea.url === safePathname)
                 {
                     return i;
                 } 
@@ -173,7 +170,6 @@ const Background1 = (props) =>
 
             setVoronoiPositions(previousVoronoiPositions => {
                 let newVoronoiPositions = [];
-
                 for (let i = 0; i < previousVoronoiPositions.length; i ++)
                 {
                     let offsetX = (desiredVoronoiPositions.current[i].x - previousVoronoiPositions[i].x) / dampening;
@@ -185,7 +181,7 @@ const Background1 = (props) =>
                         animationComplete = false;
                     }
                 }
-
+                
                 return newVoronoiPositions;
             });
 
@@ -226,7 +222,7 @@ const Background1 = (props) =>
             if (cell.halfedges != null && cell.halfedges.length > 0)
             {
                 var polygonPoints = cell.halfedges.map(halfEdge => {return `${halfEdge.getStartpoint().x},${halfEdge.getStartpoint().y}`}).join(' ');
-                polygonsData.push({id:cell.site.identifier, points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}});
+                polygonsData.push({points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}});
                 // polygonsData[cell.site.identifier] = {points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}};
             }
         }
@@ -259,12 +255,12 @@ const Background1 = (props) =>
             if (cell.halfedges != null && cell.halfedges.length > 0)
             {
                 let polygonPoints = cell.halfedges.map(halfEdge => {return `${voronoiCoordToPixelX(halfEdge.getStartpoint().x)}px ${voronoiCoordToPixelY(halfEdge.getStartpoint().y)}px`}).join(', ');
-                polygonsClippingData[cell.site.identifier] = polygonPoints;
+                polygonsClippingData[cell.site.url] = polygonPoints;
             }
             else 
             {
                 //if there are 0 points then define an arbitrary offscreen polygon to ensure the window doesn't get rendered
-                polygonsClippingData[cell.site.identifier] = '0px 0px, -1px -1px, -1px 0px';
+                polygonsClippingData[cell.site.url] = '0px 0px, -1px -1px, -1px 0px';
             }
         }
 
@@ -273,18 +269,11 @@ const Background1 = (props) =>
 
     return <React.Fragment>
         {recalculateDiagram()}
-
         <div className={voronoiBackground}>
             {getPolygonsData().map((polygonData, i) => 
                 <VoronoiPolygon key={i} id={i} fill={true} color={polygonData.color} position={polygonData.position} points={polygonData.points}/>
             )}
         </div>
-        {/* this just renders the strokes above everything else to ensure borders
-        <div className={voronoiForeground}>
-            {getPolygonsData().map((polygonData, i) => 
-                <VoronoiPolygon key={i} id={i} fill={false} position={polygonData.position} points={polygonData.points}/>
-            )}
-        </div> */}
         {/* pass the cells down to be used for clipping / animations */}
         {props.children(getPolygonClippingData())}
     </React.Fragment>
