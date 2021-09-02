@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
-import { graphql, Link, useStaticQuery } from 'gatsby'
+import { graphql, Link, useStaticQuery, navigate } from 'gatsby'
 import Container from 'react-bootstrap/Container'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
@@ -30,13 +30,14 @@ const Header = () => {
                 <Link className="nav-link" to="/contact">contact</Link>
                 {/* <Link className="nav-link" to="/projects">projects</Link> */}
                 <NavDropdown title="projects" id="collasible-nav-dropdown">
-                    <NavDropdown.Item><Link className="dropdown-item" to="/projects">
+   
+                    <NavDropdown.Item onClick={() => navigate('/projects/')}>
                         all
-                    </Link></NavDropdown.Item>
+                    </NavDropdown.Item>
                     <NavDropdown.Divider />
-                    {pagesQuery.allMarkdownRemark.edges.map(edge => <NavDropdown.Item><Link className="dropdown-item" to={`/projects/${edge.node.fields.slug}`}>
+                    {pagesQuery.allMarkdownRemark.edges.map(edge => <NavDropdown.Item key={edge.node.fields.slug} onClick={()=>navigate(`/projects/${edge.node.fields.slug}`)}>
                         {edge.node.fields.slug}
-                    </Link></NavDropdown.Item>)}
+                    </NavDropdown.Item>)}
                 </NavDropdown>
                 <Link className="nav-link" to="/blog">blog</Link>
                 

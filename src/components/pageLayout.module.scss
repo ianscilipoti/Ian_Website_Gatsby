@@ -4,6 +4,7 @@
     width: 100%;
     height: calc(100vh - 60px);
     position:absolute;
+    pointer-events: none;
     // color: black;
     // font-weight: 1000;
     
@@ -31,6 +32,7 @@ h1.pageBadge
 
     text-align: justify;
     text-justify: inter-word;
+    pointer-events: none;
 
     
 }
@@ -44,6 +46,7 @@ h1.pageBadge
     margin-top: 10px;
     display:block;
     text-align: center;
+    pointer-events: none;
 }
 
 a 
@@ -66,4 +69,5 @@ a
     margin-left: auto; 
     margin-right: auto; 
     line-height:190%;
+    pointer-events: all;
 }

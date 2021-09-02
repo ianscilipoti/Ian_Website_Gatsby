@@ -22,6 +22,7 @@ module.exports = {
       }
 
     },
+    `gatsby-plugin-image`,
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     {
@@ -41,6 +42,9 @@ module.exports = {
     },
   ],
   siteMetadata: {
+    pageGroups: [
+      "/projects"
+    ],
     pageVoronoiData: [
       {
         url: "/",
@@ -63,10 +67,7 @@ module.exports = {
         y:-5,
         color: "#c5e1e8",
         selectedHighlightMovementOverride:120,
-        globalOffset: {
-          x: 0,
-          y: 30
-        }
+        createPolygon: false, 
       },
       {
         url: "/blog",

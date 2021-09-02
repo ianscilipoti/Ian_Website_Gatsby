@@ -20,6 +20,7 @@ const Layout = ({ children, location }) => {
                         }
                     })} */}
                     {children}
+                    {/* <div></div> */}
                     
                     {/* {React.cloneElement(children, {voronoiClipData: voronoiClipData})} */}
                 </Transition>

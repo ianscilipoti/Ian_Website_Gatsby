@@ -1,4 +1,5 @@
-.svgVoronoi {
+.svgVoronoi 
+{
     height:calc(100vh - 56px);
     min-height: 750px;
     position:absolute;
@@ -8,8 +9,22 @@
     pointer-events: none;
 }
 
-.polygon {
+.polygon 
+{
     stroke-width:1;
     stroke:rgb(0, 0, 0);
     pointer-events: all;
 }
+
+
+.backgroundImage 
+{
+    fill-opacity: 0.8;
+}
+
+.backgroundImage:hover
+{
+    fill-opacity: 1;
+    transition: fill-opacity 100ms ease-in-out 
+}
+

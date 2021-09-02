@@ -11,7 +11,12 @@ const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 120;
 const animationCutoff = 0.3;
-const dampening = 9.0;
+const dampening = 12.0;
+
+const invLerp = (a, b, v) => 
+{
+    return (v - a) / (b - a);
+}
 
 const Background1 = (props) =>
 {
@@ -28,11 +33,9 @@ const Background1 = (props) =>
                             url
                             selectedHighlightMovementOverride
                             color
-                            globalOffset {
-                                x,
-                                y
-                            }
+                            createPolygon
                         }
+                        pageGroups
                     }
                 }
             }
@@ -44,6 +47,16 @@ const Background1 = (props) =>
                         x
                         y
                         color
+                        title
+                        description
+                        previewImg {
+                            childImageSharp {
+                                fixed(width: 1000, quality: 90) {
+                                    src
+                                }
+                            }
+                            relativePath
+                        }
                     }
                     fields {
                         directory
@@ -56,15 +69,12 @@ const Background1 = (props) =>
     const location = useLocation()
     const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData.concat(
         voronoiInfoQuery.allMarkdownRemark.edges.map(edge => ({...edge.node.frontmatter, url:`/${edge.node.fields.directory}/${edge.node.fields.slug}`}))
-    )
+    ).filter(area => !(area.hasOwnProperty("createPolygon") && area.createPolygon === false));
+        // debugger;
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
     const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
-        {
-            height: window.innerHeight, 
-            width: window.innerWidth} : 
-        {
-            height: 0, 
-            width: 0})
+        {height: window.innerHeight, width: window.innerWidth} : 
+        {height: 0, width: 0})
     const voronoiObj = useRef(new Voronoi());
     let diagram = useRef(voronoiObj.current.compute(voronoiPositions, bbox));
     
@@ -72,6 +82,10 @@ const Background1 = (props) =>
     let desiredVoronoiPositions = useRef(voronoiAreas.map(area => ({x: area.x, y: area.y})));
     let isAnimating = useRef(false);
     let animationRequestRef = useRef();
+
+
+
+
     React.useEffect(() => {
         function handleResize() {
         setDimensions({
@@ -90,68 +104,108 @@ const Background1 = (props) =>
         //get the goal position of each voronoi polygon based on the current page directory
         const recalculateDesiredVoronoiPositions = () =>
         {
-            const currentPageVoronoiIndex = getVoronoiAreaIndex();
-            const currentPageVoronoiPos = voronoiAreas[currentPageVoronoiIndex];
-            //how much does being visiting this page cause other page polygons to move
-            let nonHighlightedSiteOffset = selectedHighlightMovement;
 
-            if (voronoiAreas[currentPageVoronoiIndex].hasOwnProperty("selectedHighlightMovementOverride") && voronoiAreas[currentPageVoronoiIndex].selectedHighlightMovementOverride !== null)
+            const currentPageInfo = getVoronoiAreaInfo();
+            
+            // if (areaData.hasOwnProperty("overrideUrlGroup") && areaData.overrideUrlGroup !== null)
+            if (currentPageInfo.type === "group")
             {
-                nonHighlightedSiteOffset = voronoiAreas[currentPageVoronoiIndex].selectedHighlightMovementOverride;
-            }
 
-            let globalOffsetX = 0;
-            let globalOffsetY = 0;
-
-            if (voronoiAreas[currentPageVoronoiIndex].hasOwnProperty("globalOffset") && voronoiAreas[currentPageVoronoiIndex].globalOffset !== null)
-            {
-                globalOffsetX = voronoiAreas[currentPageVoronoiIndex].globalOffset.x;
-                globalOffsetY = voronoiAreas[currentPageVoronoiIndex].globalOffset.y;
-            }
-
-            const newDesiredPositions = [];
-            for (let i = 0; i < voronoiAreas.length; i ++)
-            {
-                const originalVoronoiPosition = voronoiAreas[i];
-
-                if (i !== currentPageVoronoiIndex)
-                {
-                    let directionToHoveredSiteX = currentPageVoronoiPos.x - originalVoronoiPosition.x;
-                    let directionToHoveredSiteY = currentPageVoronoiPos.y - originalVoronoiPosition.y;
-                    const vectorMagnitude = Math.sqrt(directionToHoveredSiteX*directionToHoveredSiteX + directionToHoveredSiteY*directionToHoveredSiteY);
-                    directionToHoveredSiteX /= vectorMagnitude;
-                    directionToHoveredSiteY /= vectorMagnitude;
-                    newDesiredPositions.push({
-                        x: voronoiAreas[i].x - directionToHoveredSiteX * nonHighlightedSiteOffset + globalOffsetX,
-                        y: voronoiAreas[i].y - directionToHoveredSiteY * nonHighlightedSiteOffset + globalOffsetY});
+                //calculate bounding box for url group
+                let groupBounds = {
+                    minX: boundingBoxSize*2,
+                    maxX: -boundingBoxSize,
+                    minY: boundingBoxSize*2,
+                    maxY: -boundingBoxSize,
                 }
-                else
+
+                for (let i = 0; i < voronoiAreas.length; i ++)
                 {
-                    newDesiredPositions.push({
-                        x: boundingBoxSize/2 + globalOffsetX,
-                        y: boundingBoxSize/2 + globalOffsetY
-                    });
+                    const thisAreaData = voronoiAreas[i];
+                    const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
+                    if (isWithinUrlGroup)
+                    {
+                        groupBounds.minX = Math.min(groupBounds.minX, thisAreaData.x);
+                        groupBounds.maxX = Math.max(groupBounds.maxX, thisAreaData.x);
+                        groupBounds.minY = Math.min(groupBounds.minY, thisAreaData.y);
+                        groupBounds.maxY = Math.max(groupBounds.maxY, thisAreaData.y);
+                    }
                 }
+
+                const newDesiredPositions = [];
+                for (let i = 0; i < voronoiAreas.length; i ++)
+                {
+                    const thisAreaData = voronoiAreas[i];
+                    const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
+                    //------------------- add new field to config that is url groups
+
+
+
+                    //arrange group url areas to fill entire screen. All other areas drop down
+                    if (isWithinUrlGroup)
+                    {
+                        newDesiredPositions.push(
+                            {
+                                x: invLerp(groupBounds.minX - boundingBoxSize/3, groupBounds.maxX + boundingBoxSize/3, thisAreaData.x)*boundingBoxSize,
+                                y: invLerp(groupBounds.minY - boundingBoxSize/3, groupBounds.maxY + boundingBoxSize/3, thisAreaData.y)*boundingBoxSize
+                            }
+                        );
+                    }
+                    else {
+                        newDesiredPositions.push(
+                            {
+                                x: thisAreaData.x,// + fromCenter.x*5,
+                                y: thisAreaData.y + boundingBoxSize
+                            }
+                        );
+                    }
+                }
+
+                desiredVoronoiPositions.current = newDesiredPositions;
+            }
+            else if (currentPageInfo.type === "area")
+            {
+                
+                const areaData = voronoiAreas[currentPageInfo.index];
+                //how much does being visiting this page cause other page polygons to move
+                let nonHighlightedSiteOffset = selectedHighlightMovement;
+
+                if (areaData.hasOwnProperty("selectedHighlightMovementOverride") && areaData.selectedHighlightMovementOverride !== null)
+                {
+                    nonHighlightedSiteOffset = areaData.selectedHighlightMovementOverride;
+                }
+
+                const newDesiredPositions = [];
+                for (let i = 0; i < voronoiAreas.length; i ++)
+                {
+                    const originalVoronoiPosition = voronoiAreas[i];
+
+                    if (i !== currentPageInfo.index)
+                    {
+                        let directionToHoveredSiteX = areaData.x - originalVoronoiPosition.x;
+                        let directionToHoveredSiteY = areaData.y - originalVoronoiPosition.y;
+                        const vectorMagnitude = Math.sqrt(directionToHoveredSiteX*directionToHoveredSiteX + directionToHoveredSiteY*directionToHoveredSiteY);
+                        directionToHoveredSiteX /= vectorMagnitude;
+                        directionToHoveredSiteY /= vectorMagnitude;
+                        newDesiredPositions.push({
+                            x: voronoiAreas[i].x - directionToHoveredSiteX * nonHighlightedSiteOffset,
+                            y: voronoiAreas[i].y - directionToHoveredSiteY * nonHighlightedSiteOffset});
+                    }
+                    else
+                    {
+                        newDesiredPositions.push({
+                            x: boundingBoxSize/2,
+                            y: boundingBoxSize/2
+                        });
+                    }
+                }
+                
+                desiredVoronoiPositions.current = newDesiredPositions;
             }
             
-            desiredVoronoiPositions.current = newDesiredPositions;
         }
 
-         //get the index of the voronoiArea object of the current page
-        const getVoronoiAreaIndex = () =>
-        {
-            for(let i = 0; i < voronoiAreas.length; i ++)
-            {
-                const voronoiArea = voronoiAreas[i];
-                const safePathname = location.pathname.substr(-1) === "/" ? location.pathname.slice(0, -1) : location.pathname;
-                if (voronoiArea.hasOwnProperty('url') && voronoiArea.url === safePathname)
-                {
-                    return i;
-                } 
-            }
-            console.error("page indentifier invalid");
-            return 0;
-        }
+        
 
         const tryStartUpdateLoop = () =>
         {
@@ -172,6 +226,7 @@ const Background1 = (props) =>
                 let newVoronoiPositions = [];
                 for (let i = 0; i < previousVoronoiPositions.length; i ++)
                 {
+                    
                     let offsetX = (desiredVoronoiPositions.current[i].x - previousVoronoiPositions[i].x) / dampening;
                     let offsetY = (desiredVoronoiPositions.current[i].y - previousVoronoiPositions[i].y) / dampening;
                     newVoronoiPositions.push({...voronoiAreas[i], x: (previousVoronoiPositions[i].x + offsetX), y: (previousVoronoiPositions[i].y + offsetY)});
@@ -181,7 +236,7 @@ const Background1 = (props) =>
                         animationComplete = false;
                     }
                 }
-                
+                // debugger;
                 return newVoronoiPositions;
             });
 
@@ -205,6 +260,37 @@ const Background1 = (props) =>
         };
     },[location])
 
+     //get the index of the voronoiArea object of the current page
+    const getVoronoiAreaInfo = () =>
+    {
+         const pthnm = location.pathname;
+         const safePathname = pthnm.substr(-1) === "/" && pthnm.length>1  ? pthnm.slice(0, -1) : pthnm;
+        
+         for(let i = 0; i < voronoiAreas.length; i ++)
+         {
+             const voronoiArea = voronoiAreas[i];
+             
+             if (voronoiArea.hasOwnProperty('url') && voronoiArea.url === safePathname)
+             {
+                 return {type: "area", index: i};
+             } 
+         }
+         //check to see if this is a page group
+         const pageGroups = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageGroups;
+         for(let i = 0; i < pageGroups.length; i ++)
+         {
+             const group = pageGroups[i];
+             if (group === safePathname)
+             {
+                 return {type: "group", urlGroup: group};
+             }
+
+         }
+
+         console.error("page indentifier invalid");
+         return {type: "error", index: -1};
+    }
+
     const recalculateDiagram = () =>
     {
         voronoiObj.current.recycle(diagram.current);
@@ -222,7 +308,7 @@ const Background1 = (props) =>
             if (cell.halfedges != null && cell.halfedges.length > 0)
             {
                 var polygonPoints = cell.halfedges.map(halfEdge => {return `${halfEdge.getStartpoint().x},${halfEdge.getStartpoint().y}`}).join(' ');
-                polygonsData.push({points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}});
+                polygonsData.push({points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}, cell: cell});
                 // polygonsData[cell.site.identifier] = {points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}};
             }
         }
@@ -271,7 +357,7 @@ const Background1 = (props) =>
         {recalculateDiagram()}
         <div className={voronoiBackground}>
             {getPolygonsData().map((polygonData, i) => 
-                <VoronoiPolygon key={i} id={i} fill={true} color={polygonData.color} position={polygonData.position} points={polygonData.points}/>
+                <VoronoiPolygon key={i} id={i} fill={true} color={polygonData.color} position={polygonData.position} points={polygonData.points} allData={polygonData.cell} displayingPageGroup={getVoronoiAreaInfo().type === "group"}/>
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}
