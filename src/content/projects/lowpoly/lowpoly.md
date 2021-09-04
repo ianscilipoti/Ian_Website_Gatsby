@@ -4,6 +4,6 @@ description: A procedural terrain generator and low poly terrain engine
 previewImg: River.png
 x: 0
 y: -10
-color: "#e3c89a"
+color: "#60885d"
 ---
 Low poly terrain description: goes here

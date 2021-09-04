@@ -77,10 +77,11 @@ const Background1 = (props) =>
         {height: 0, width: 0})
     const voronoiObj = useRef(new Voronoi());
     let diagram = useRef(voronoiObj.current.compute(voronoiPositions, bbox));
+    let [isAnimating, setIsAnimating] = useState(false);
     
     //these change whenever a route change happens
     let desiredVoronoiPositions = useRef(voronoiAreas.map(area => ({x: area.x, y: area.y})));
-    let isAnimating = useRef(false);
+    
     let animationRequestRef = useRef();
 
 
@@ -209,7 +210,7 @@ const Background1 = (props) =>
 
         const tryStartUpdateLoop = () =>
         {
-            if (!isAnimating.current)
+            if (!isAnimating)
             {
                 animationRequestRef.current = window.requestAnimationFrame(updateCanvas);
             }
@@ -218,7 +219,7 @@ const Background1 = (props) =>
 
         const updateCanvas = () =>
         {
-            isAnimating.current = true;
+            setIsAnimating(true);
 
             let animationComplete = true;
 
@@ -243,7 +244,7 @@ const Background1 = (props) =>
             //verify if the animation is done
             if (animationComplete)
             {
-                isAnimating.current = false;
+                setIsAnimating(false);
             }
             else
             {
@@ -256,7 +257,7 @@ const Background1 = (props) =>
 
         return () => { 
             cancelAnimationFrame(animationRequestRef.current);
-            isAnimating.current = false;
+            setIsAnimating(false);
         };
     },[location])
 
@@ -297,23 +298,6 @@ const Background1 = (props) =>
         diagram.current = voronoiObj.current.compute(voronoiPositions, bbox);
     }
 
-    //don't call without calling recalculateDiagram first!
-    //gets general data for renderinng VoronoiPolygonn elements
-    const getPolygonsData = () =>
-    {
-        const polygonsData = [];
-        for (let i = 0; i < diagram.current.cells.length; i ++)
-        {
-            const cell = diagram.current.cells[i];
-            if (cell.halfedges != null && cell.halfedges.length > 0)
-            {
-                var polygonPoints = cell.halfedges.map(halfEdge => {return `${halfEdge.getStartpoint().x},${halfEdge.getStartpoint().y}`}).join(' ');
-                polygonsData.push({points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}, cell: cell});
-                // polygonsData[cell.site.identifier] = {points: polygonPoints, color: cell.site.color, position: {x: cell.site.x, y: cell.site.y}};
-            }
-        }
-        return polygonsData;
-    }
     //get points formatted for clipping paths
     //don't call without calling recalculateDiagram first!
     const getPolygonClippingData = () =>
@@ -353,15 +337,27 @@ const Background1 = (props) =>
         return polygonsClippingData;
     }
 
+    const getPolygonClippingData1 = () =>
+    {
+        const dataPerUrl = {};
+
+        for (let i = 0; i < diagram.current.cells.length; i ++)
+        {
+            const cell = diagram.current.cells[i];
+            dataPerUrl[cell.site.url] = cell;
+        }
+        return dataPerUrl;
+    }
+
     return <React.Fragment>
         {recalculateDiagram()}
         <div className={voronoiBackground}>
-            {getPolygonsData().map((polygonData, i) => 
-                <VoronoiPolygon key={i} id={i} fill={true} color={polygonData.color} position={polygonData.position} points={polygonData.points} allData={polygonData.cell} displayingPageGroup={getVoronoiAreaInfo().type === "group"}/>
+            {diagram.current.cells.filter(cell => cell.halfedges != null && cell.halfedges.length > 0).map((cell, i) =>
+                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} displayingPageGroup={getVoronoiAreaInfo().type === "group"}/>
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}
-        {props.children(getPolygonClippingData())}
+        {props.children(getPolygonClippingData(), isAnimating)}
     </React.Fragment>
 }
 

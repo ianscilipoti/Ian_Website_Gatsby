@@ -1,9 +1,9 @@
 ---
 title: cities
 description: blah blah
-previewImg: preview.jpg
+previewImg: preview.png
 x: 95
 y: -30
-color: "#93c2b0"
+color: "#9db389"
 ---
 asdjfa;ksjdf;aksjdf;aksjdfl;kajsdf;laksj;fakjdf;

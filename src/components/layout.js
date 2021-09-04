@@ -10,8 +10,8 @@ const Layout = ({ children, location }) => {
     return <div>
         <Header />
         <Background>
-            {(voronoiClipData) => 
-                <Transition location={location} voronoiClipData={voronoiClipData}>
+            {(voronoiClipData, isAnimating) => 
+                <Transition location={location} voronoiClipData={voronoiClipData} isAnimating={isAnimating}>
                     {/* {React.Children.map(children, child => {
                         // Checking isValidElement is the safe way and avoids a typescript
                         // error too.

@@ -32,7 +32,7 @@ const PassVoronoiDataWrapper = (props) => (
     {state => (
       <div
          style={{...getTransitionStyles[state]}}>
-        {React.cloneElement(props.children, {voronoiClipData: props.voronoiClipData})}
+        {React.cloneElement(props.children, {voronoiClipData: props.voronoiClipData, isAnimating: props.isAnimating})}
         {/* {props.children} */}
       </div>
     )}
