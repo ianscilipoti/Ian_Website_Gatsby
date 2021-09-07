@@ -19,7 +19,7 @@ const Header = () => {
             }
         }
     }`)
-    return <Navbar collapseOnSelect="true"  bg="dark" variant="dark">
+    return <Navbar collapseOnSelect="true"  bg="dark" variant="dark" expand="sm">
         {/* style={{backgroundColor:"black"}} */}
         <Container>
             <Link className="navbar-brand" to="/">IAN SCILIPOTI</Link>
@@ -39,7 +39,7 @@ const Header = () => {
                         {edge.node.fields.slug}
                     </NavDropdown.Item>)}
                 </NavDropdown>
-                <Link className="nav-link" to="/blog">blog</Link>
+                {/* <Link className="nav-link" to="/blog">blog</Link> */}
                 
                 
                 

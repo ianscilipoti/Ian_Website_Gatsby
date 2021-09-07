@@ -52,7 +52,7 @@ module.exports = {
         y:40,
         // color: "#2c4d8f",
         color: "#ccdebd",
-        selectedHighlightMovementOverride:80
+        selectedHighlightMovementOverride:90
       }, 
       {
         url: "/contact",
@@ -68,12 +68,6 @@ module.exports = {
         color: "#c5e1e8",
         selectedHighlightMovementOverride:120,
         createPolygon: false, 
-      },
-      {
-        url: "/blog",
-        x:48, 
-        y:70,
-        color: "#114e5c"
       },
       // {
       //   identifier: "bg1", 

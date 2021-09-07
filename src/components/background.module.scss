@@ -2,9 +2,11 @@
 .voronoiBackground
 {
     position: absolute;
-    top: 56px;
-    left: 50%;
+    width:100%;
+    height:calc(100vh - 56px);
     z-index: -3;
+    overflow-x: hidden;
+    
 }
 
 .voronoiForeground

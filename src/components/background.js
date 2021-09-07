@@ -4,14 +4,15 @@ import Voronoi from 'voronoi'
 import VoronoiPolygon from './voronoiPolygon'
 import {voronoiBackground} from './background.module.scss'
 import { useStaticQuery, graphql } from 'gatsby'
+import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBoxPadding} from '../common/common.js'
 
 //consts
-const boundingBoxSize = 100;
-const boundingBoxPadding = 100;
+//const boundingBoxSize = 100;
+//const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
-const selectedHighlightMovement = 120;
+const selectedHighlightMovement = 150;
 const animationCutoff = 0.3;
-const dampening = 12.0;
+const dampening = 9.0;
 
 const invLerp = (a, b, v) => 
 {
@@ -67,7 +68,8 @@ const Background1 = (props) =>
         }
     }`)
     const location = useLocation()
-    const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData.concat(
+    const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData
+    .concat(
         voronoiInfoQuery.allMarkdownRemark.edges.map(edge => ({...edge.node.frontmatter, url:`/${edge.node.fields.directory}/${edge.node.fields.slug}`}))
     ).filter(area => !(area.hasOwnProperty("createPolygon") && area.createPolygon === false));
         // debugger;
@@ -138,7 +140,7 @@ const Background1 = (props) =>
                 {
                     const thisAreaData = voronoiAreas[i];
                     const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
-                    //------------------- add new field to config that is url groups
+                    const padding = 10;
 
 
 
@@ -147,8 +149,8 @@ const Background1 = (props) =>
                     {
                         newDesiredPositions.push(
                             {
-                                x: invLerp(groupBounds.minX - boundingBoxSize/3, groupBounds.maxX + boundingBoxSize/3, thisAreaData.x)*boundingBoxSize,
-                                y: invLerp(groupBounds.minY - boundingBoxSize/3, groupBounds.maxY + boundingBoxSize/3, thisAreaData.y)*boundingBoxSize
+                                x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
+                                y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize
                             }
                         );
                     }
@@ -219,6 +221,7 @@ const Background1 = (props) =>
 
         const updateCanvas = () =>
         {
+            
             setIsAnimating(true);
 
             let animationComplete = true;
@@ -253,6 +256,7 @@ const Background1 = (props) =>
             //window.requestAnimationFrame(updateCanvas);
         }
         recalculateDesiredVoronoiPositions();
+        console.log("recalculating desired pos");
         tryStartUpdateLoop();
 
         return () => { 
@@ -302,21 +306,21 @@ const Background1 = (props) =>
     //don't call without calling recalculateDiagram first!
     const getPolygonClippingData = () =>
     {
-        const headerHeightPx = 56;
-        function voronoiCoordToPixelX (x)
-        {
+        // const headerHeightPx = 56;
+        // function voronoiCoordToPixelX (x)
+        // {
 
-            let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
-            let extraSideSpace = (dimensions.width - pageHeightMinusHeader)/2;//this much space on either side of viewbox
-            return (x / boundingBoxSize) * pageHeightMinusHeader + extraSideSpace;
-        }
+        //     let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
+        //     let extraSideSpace = (dimensions.width - pageHeightMinusHeader)/2;//this much space on either side of viewbox
+        //     return (x / boundingBoxSize) * pageHeightMinusHeader + extraSideSpace;
+        // }
 
-        function voronoiCoordToPixelY (y)
-        {
+        // function voronoiCoordToPixelY (y)
+        // {
 
-            let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
-            return (y / boundingBoxSize) * pageHeightMinusHeader;
-        }
+        //     let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
+        //     return (y / boundingBoxSize) * pageHeightMinusHeader;
+        // }
 
         const polygonsClippingData = {};
         for (let i = 0; i < diagram.current.cells.length; i ++)
@@ -324,7 +328,9 @@ const Background1 = (props) =>
             const cell = diagram.current.cells[i];
             if (cell.halfedges != null && cell.halfedges.length > 0)
             {
-                let polygonPoints = cell.halfedges.map(halfEdge => {return `${voronoiCoordToPixelX(halfEdge.getStartpoint().x)}px ${voronoiCoordToPixelY(halfEdge.getStartpoint().y)}px`}).join(', ');
+                let polygonPoints = cell.halfedges.map(halfEdge => {return `
+                    ${voronoiCoordToPixelX(halfEdge.getStartpoint().x, dimensions.width, dimensions.height)}px 
+                    ${voronoiCoordToPixelY(halfEdge.getStartpoint().y, dimensions.width, dimensions.height)}px`}).join(', ');
                 polygonsClippingData[cell.site.url] = polygonPoints;
             }
             else 
@@ -349,15 +355,17 @@ const Background1 = (props) =>
         return dataPerUrl;
     }
 
+    const isValidCell = (cell) => cell.halfedges != null && cell.halfedges.length;
+
     return <React.Fragment>
         {recalculateDiagram()}
-        <div className={voronoiBackground}>
-            {diagram.current.cells.filter(cell => cell.halfedges != null && cell.halfedges.length > 0).map((cell, i) =>
+        <div className={voronoiBackground} >
+            {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
                 <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} displayingPageGroup={getVoronoiAreaInfo().type === "group"}/>
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}
-        {props.children(getPolygonClippingData(), isAnimating)}
+        {props.children(diagram.current.cells, isAnimating)}
     </React.Fragment>
 }
 
