@@ -4,10 +4,16 @@
     width: 100%;
     height: calc(100vh - 60px);
     position:absolute;
-    pointer-events: none;
-    // color: black;
-    // font-weight: 1000;
+    // pointer-events: none;
+    overflow-y:scroll;
     
+}
+
+.pageScrollWindow
+{
+    // height: 100%;
+    // width: 100%;
+    // overflow-y:scroll;
 }
 
 h1.pageBadge
@@ -19,8 +25,6 @@ h1.pageBadge
 {
     position: absolute;
     z-index: 20;
-    
-    width:calc(100% - 50);
     // max-width: 650px;
     min-height: 200px;
 
@@ -59,10 +63,10 @@ a
     /* width:450px; */
     /* background-color: rgba(255, 255, 255, 0.6); */
     min-height: 200px;
-    
+    // max-height: calc(100vh - 400px);
     // color:white;
-    padding-left:15px;
-    padding-right:15px;
+    padding-left:25px;
+    padding-right:25px;
     left: 0; 
     right: 0; 
     top:400px;
@@ -70,4 +74,5 @@ a
     margin-right: auto; 
     //line-height:190%;
     pointer-events: all;
+    // overflow-y: scroll;
 }

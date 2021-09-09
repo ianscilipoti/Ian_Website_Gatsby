@@ -1,5 +1,5 @@
 import React from 'react'
-import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
+import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize} from '../common/common.js'
 
 const PageNames = (props) => 
 {
@@ -52,7 +52,17 @@ const PageNames = (props) =>
                 const centerPt = getCenterPt(cell);
                 const xPx = voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height);
                 const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);
-                return <h1 style={{left:`${xPx}px`, top:`${yPx}px`, position:"fixed", transform:"translateX(-50%)", pointerEvents:"none"}}>{cell.site.title.toUpperCase()}</h1>
+                let positionStyle = {top:`${yPx}px`}//left:`${xPx}px`, 
+                if (cell.site.x < boundingBoxSize/2)
+                {
+                    positionStyle["left"] = `${xPx}px`;
+                }
+                else
+                {
+                    positionStyle["right"] = `${dimensions.width-xPx}px`
+                }
+
+                return <h1 key={cell.site.color} style={{...positionStyle, position:"fixed", transform:"translateX(-50%)", pointerEvents:"none"}}>{cell.site.title.toUpperCase()}</h1>
             }
         })}
     </div>
