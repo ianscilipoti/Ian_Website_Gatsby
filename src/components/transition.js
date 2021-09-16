@@ -4,8 +4,8 @@ import {
   Transition as ReactTransition,
 } from "react-transition-group"
 
-const timeout = 300
-const delay = 200
+const timeout = 10//300
+const delay = 0//200
 const getTransitionStyles = {
   entering: {
     position: `absolute`,

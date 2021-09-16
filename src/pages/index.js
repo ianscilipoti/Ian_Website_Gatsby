@@ -4,8 +4,6 @@ import '../common/common.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { graphql, Link, useStaticQuery } from 'gatsby'
 import Carousel from 'react-bootstrap/Carousel';
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
 const IndexPage = (props) => {
@@ -46,10 +44,8 @@ const IndexPage = (props) => {
       <Carousel>
         {projectData.allMarkdownRemark.edges.map((edge, i) => {
           return <Carousel.Item key={i}>
-              <Link to={`/projects/${edge.node.frontmatter.title}`}>
-                <GatsbyImage
-                  // className="d-block w-100"
-                  image={getImage(edge.node.frontmatter.previewImg)}
+                <Link to={`/projects/${edge.node.fields.slug}`}>
+                  <GatsbyImage image={getImage(edge.node.frontmatter.previewImg)}
                 />
 
                 <Carousel.Caption style={{backgroundColor:"rgba(0, 0, 0, 0.5"}}>

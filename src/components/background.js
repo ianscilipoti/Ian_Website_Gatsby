@@ -12,7 +12,8 @@ import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBox
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 150;
 const animationCutoff = 0.3;
-const dampening = 9.0;
+const dampening = 3.0;
+const verticalStackBreakpoint = 500;
 
 const invLerp = (a, b, v) => 
 {
@@ -34,7 +35,6 @@ const Background1 = (props) =>
                             url
                             selectedHighlightMovementOverride
                             color
-                            createPolygon
                         }
                         pageGroups
                     }
@@ -71,7 +71,7 @@ const Background1 = (props) =>
     const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData
     .concat(
         voronoiInfoQuery.allMarkdownRemark.edges.map(edge => ({...edge.node.frontmatter, url:`/${edge.node.fields.directory}/${edge.node.fields.slug}`}))
-    ).filter(area => !(area.hasOwnProperty("createPolygon") && area.createPolygon === false));
+    );//.filter(area => !(area.hasOwnProperty("createPolygon") && area.createPolygon === false));
         // debugger;
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
     const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
@@ -113,7 +113,7 @@ const Background1 = (props) =>
             // if (areaData.hasOwnProperty("overrideUrlGroup") && areaData.overrideUrlGroup !== null)
             if (currentPageInfo.type === "group")
             {
-
+                
                 //calculate bounding box for url group
                 let groupBounds = {
                     minX: boundingBoxSize*2,
@@ -121,6 +121,7 @@ const Background1 = (props) =>
                     minY: boundingBoxSize*2,
                     maxY: -boundingBoxSize,
                 }
+                let numWithinGroup = 0;
 
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
@@ -132,27 +133,41 @@ const Background1 = (props) =>
                         groupBounds.maxX = Math.max(groupBounds.maxX, thisAreaData.x);
                         groupBounds.minY = Math.min(groupBounds.minY, thisAreaData.y);
                         groupBounds.maxY = Math.max(groupBounds.maxY, thisAreaData.y);
+                        numWithinGroup ++;
                     }
                 }
 
                 const newDesiredPositions = [];
+                let numSeenWithinGroup = 0;
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
                     const thisAreaData = voronoiAreas[i];
                     const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
                     const padding = 10;
 
-
-
                     //arrange group url areas to fill entire screen. All other areas drop down
                     if (isWithinUrlGroup)
                     {
-                        newDesiredPositions.push(
-                            {
-                                x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
-                                y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize
-                            }
-                        );
+                        
+                        if (dimensions.width > verticalStackBreakpoint)
+                        {
+                            newDesiredPositions.push(
+                                {
+                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
+                                    y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize
+                                }
+                            );    
+                        }
+                        else
+                        {
+                            const rowHeight = boundingBoxSize/(numWithinGroup+1);
+                            newDesiredPositions.push({
+                                //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
+                                x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.1 + 0.9*((groupBounds.minX + groupBounds.maxX)/2),
+                                y: (numSeenWithinGroup+1)*rowHeight + rowHeight/2
+                            });
+                        }
+                        numSeenWithinGroup++;
                     }
                     else {
                         newDesiredPositions.push(
@@ -185,6 +200,8 @@ const Background1 = (props) =>
 
                     if (i !== currentPageInfo.index)
                     {
+                        // let directionToHoveredSiteX = boundingBoxSize/2 - originalVoronoiPosition.x;
+                        // let directionToHoveredSiteY = boundingBoxSize/2 - originalVoronoiPosition.y;
                         let directionToHoveredSiteX = areaData.x - originalVoronoiPosition.x;
                         let directionToHoveredSiteY = areaData.y - originalVoronoiPosition.y;
                         const vectorMagnitude = Math.sqrt(directionToHoveredSiteX*directionToHoveredSiteX + directionToHoveredSiteY*directionToHoveredSiteY);
@@ -240,7 +257,6 @@ const Background1 = (props) =>
                         animationComplete = false;
                     }
                 }
-                // debugger;
                 return newVoronoiPositions;
             });
 
@@ -263,7 +279,7 @@ const Background1 = (props) =>
             cancelAnimationFrame(animationRequestRef.current);
             setIsAnimating(false);
         };
-    },[location])
+    },[location, dimensions])
 
      //get the index of the voronoiArea object of the current page
     const getVoronoiAreaInfo = () =>
@@ -300,59 +316,6 @@ const Background1 = (props) =>
     {
         voronoiObj.current.recycle(diagram.current);
         diagram.current = voronoiObj.current.compute(voronoiPositions, bbox);
-    }
-
-    //get points formatted for clipping paths
-    //don't call without calling recalculateDiagram first!
-    const getPolygonClippingData = () =>
-    {
-        // const headerHeightPx = 56;
-        // function voronoiCoordToPixelX (x)
-        // {
-
-        //     let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
-        //     let extraSideSpace = (dimensions.width - pageHeightMinusHeader)/2;//this much space on either side of viewbox
-        //     return (x / boundingBoxSize) * pageHeightMinusHeader + extraSideSpace;
-        // }
-
-        // function voronoiCoordToPixelY (y)
-        // {
-
-        //     let pageHeightMinusHeader = dimensions.height - headerHeightPx;//height of viewbox in pixels
-        //     return (y / boundingBoxSize) * pageHeightMinusHeader;
-        // }
-
-        const polygonsClippingData = {};
-        for (let i = 0; i < diagram.current.cells.length; i ++)
-        {
-            const cell = diagram.current.cells[i];
-            if (cell.halfedges != null && cell.halfedges.length > 0)
-            {
-                let polygonPoints = cell.halfedges.map(halfEdge => {return `
-                    ${voronoiCoordToPixelX(halfEdge.getStartpoint().x, dimensions.width, dimensions.height)}px 
-                    ${voronoiCoordToPixelY(halfEdge.getStartpoint().y, dimensions.width, dimensions.height)}px`}).join(', ');
-                polygonsClippingData[cell.site.url] = polygonPoints;
-            }
-            else 
-            {
-                //if there are 0 points then define an arbitrary offscreen polygon to ensure the window doesn't get rendered
-                polygonsClippingData[cell.site.url] = '0px 0px, -1px -1px, -1px 0px';
-            }
-        }
-
-        return polygonsClippingData;
-    }
-
-    const getPolygonClippingData1 = () =>
-    {
-        const dataPerUrl = {};
-
-        for (let i = 0; i < diagram.current.cells.length; i ++)
-        {
-            const cell = diagram.current.cells[i];
-            dataPerUrl[cell.site.url] = cell;
-        }
-        return dataPerUrl;
     }
 
     const isValidCell = (cell) => cell.halfedges != null && cell.halfedges.length;

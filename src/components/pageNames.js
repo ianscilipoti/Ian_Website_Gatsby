@@ -1,5 +1,5 @@
 import React from 'react'
-import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize} from '../common/common.js'
+import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
 
 const PageNames = (props) => 
 {
@@ -46,24 +46,13 @@ const PageNames = (props) =>
     }
       
     return <div>
-        {props.voronoiData.map((cell) => {
-            if(cell.site.previewImg) 
-            {
-                const centerPt = getCenterPt(cell);
-                const xPx = voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height);
-                const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);
-                let positionStyle = {top:`${yPx}px`}//left:`${xPx}px`, 
-                if (cell.site.x < boundingBoxSize/2)
-                {
-                    positionStyle["left"] = `${xPx}px`;
-                }
-                else
-                {
-                    positionStyle["right"] = `${dimensions.width-xPx}px`
-                }
-
-                return <h1 key={cell.site.color} style={{...positionStyle, position:"fixed", transform:"translateX(-50%)", pointerEvents:"none"}}>{cell.site.title.toUpperCase()}</h1>
-            }
+        {props.voronoiData.filter(cell => cell.site.previewImg).map((cell) => {
+            const centerPt = getCenterPt(cell);
+            const xPx = voronoiCoordToPixelX(centerPt.x, dimensions.width, dimensions.height);
+            const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);
+            let positionStyle = {left: `${xPx}px`, top:`${yPx}px`, position:"absolute", pointerEvents:"none", transform:"translateX(-50%)"}//left:`${xPx}px`, 
+    
+            return <h2 key={cell.site.color} style={positionStyle}>{cell.site.title.toUpperCase()}</h2>
         })}
     </div>
 }

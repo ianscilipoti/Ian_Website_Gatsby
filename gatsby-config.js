@@ -49,26 +49,27 @@ module.exports = {
       {
         url: "/",
         x:15, 
-        y:40,
+        y:80,
         // color: "#2c4d8f",
-        color: "#ccdebd",
+        color: "#718f71",
         selectedHighlightMovementOverride:90
       }, 
       {
         url: "/contact",
         x:80,
-        y:55,
+        y:95,
         color: "#24736b",
-        selectedHighlightMovementOverride:70
+        selectedHighlightMovementOverride:70,
+        createPolygon: true
       }, 
-      {
-        url: "/projects",
-        x:40, 
-        y:-5,
-        color: "#c5e1e8",
-        selectedHighlightMovementOverride:120,
-        createPolygon: false, 
-      },
+      // {
+      //   url: "/projects",
+      //   x:40, 
+      //   y:-5,
+      //   color: "#c5e1e8",
+      //   selectedHighlightMovementOverride:120,
+      //   createPolygon: false, 
+      // },
       // {
       //   identifier: "bg1", 
       //   x:100, 

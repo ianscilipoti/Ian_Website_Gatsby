@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import PageNames from '../components/pageNames'
-import {directoryLink, tutorialText} from './projects.module.scss'
+import {tutorialText} from './projects.module.scss'
 
 const ProjectsPage = (props) => {
 
