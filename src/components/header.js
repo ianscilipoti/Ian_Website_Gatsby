@@ -19,7 +19,7 @@ const Header = () => {
             }
         }
     }`)
-    return <Navbar collapseOnSelect="true"  bg="dark" variant="dark" expand="sm">
+    return <Navbar style={{zIndex:3}} collapseOnSelect="true"  bg="dark" variant="dark" expand="sm">
         {/* style={{backgroundColor:"black"}} */}
         <Container>
             <Link className="navbar-brand" to="/">IAN SCILIPOTI</Link>

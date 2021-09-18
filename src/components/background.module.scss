@@ -3,9 +3,9 @@
 {
     position: absolute;
     width:100%;
-    height:calc(100vh - 56px);
-    z-index: -3;
+    height:calc(100vh - 52px);
     overflow-x: hidden;
+    pointer-events: none;
     
 }
 

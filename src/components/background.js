@@ -12,7 +12,7 @@ import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBox
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 150;
 const animationCutoff = 0.3;
-const dampening = 3.0;
+const dampening = 7;
 const verticalStackBreakpoint = 500;
 
 const invLerp = (a, b, v) => 
@@ -103,7 +103,10 @@ const Background1 = (props) =>
         }
     })
 
+    const urlWithinGroup = (url, group) => url.startsWith(group);
+
     useEffect(() => {
+        
         //get the goal position of each voronoi polygon based on the current page directory
         const recalculateDesiredVoronoiPositions = () =>
         {
@@ -126,7 +129,7 @@ const Background1 = (props) =>
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
                     const thisAreaData = voronoiAreas[i];
-                    const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
+                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup);//.startsWith(currentPageInfo.urlGroup); 
                     if (isWithinUrlGroup)
                     {
                         groupBounds.minX = Math.min(groupBounds.minX, thisAreaData.x);
@@ -142,7 +145,7 @@ const Background1 = (props) =>
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
                     const thisAreaData = voronoiAreas[i];
-                    const isWithinUrlGroup = thisAreaData.url.startsWith(currentPageInfo.urlGroup); 
+                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup); 
                     const padding = 10;
 
                     //arrange group url areas to fill entire screen. All other areas drop down
@@ -225,8 +228,6 @@ const Background1 = (props) =>
             
         }
 
-        
-
         const tryStartUpdateLoop = () =>
         {
             if (!isAnimating)
@@ -264,6 +265,10 @@ const Background1 = (props) =>
             if (animationComplete)
             {
                 setIsAnimating(false);
+                if (props.animationFinished)
+                {
+                    props.animationFinished();
+                }
             }
             else
             {
@@ -322,9 +327,16 @@ const Background1 = (props) =>
 
     return <React.Fragment>
         {recalculateDiagram()}
-        <div className={voronoiBackground} >
+        {/* color backgrounds */}
+        <div className={voronoiBackground} style={{zIndex:-1}}>
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} displayingPageGroup={getVoronoiAreaInfo().type === "group"}/>
+                <VoronoiPolygon key={cell.site.url} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false}/>
+            )}
+        </div>
+        {/* strokes. Could improve performance here probably*/}
+        <div className={voronoiBackground} style={{zIndex:1}}>
+            {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
+                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true}/>
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}

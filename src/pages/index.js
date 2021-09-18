@@ -40,13 +40,11 @@ const IndexPage = (props) => {
         I am a developer/hobbiest/artistically inclined person located in upstate New York. This websites serves as a 
         hub for all things I do including blog posts about my process as well as project showcases. 
       </p>
-
       <Carousel>
         {projectData.allMarkdownRemark.edges.map((edge, i) => {
           return <Carousel.Item key={i}>
                 <Link to={`/projects/${edge.node.fields.slug}`}>
-                  <GatsbyImage image={getImage(edge.node.frontmatter.previewImg)}
-                />
+                  <GatsbyImage image={getImage(edge.node.frontmatter.previewImg)} alt={`${edge.node.frontmatter.title} preview image`}/>
 
                 <Carousel.Caption style={{backgroundColor:"rgba(0, 0, 0, 0.5"}}>
                   <h3>{edge.node.frontmatter.title}</h3>
