@@ -1,23 +1,8 @@
-.page
-{
-    /* background-image: url("pepper.png"); */
-    width: 100%;
-    height: calc(100vh - 60px);
-    position:absolute;
-    // pointer-events: none;
-    // overflow-y:scroll;
-}
-
-.pageScrollWindow
-{
-    // height: 100%;
-    // width: 100%;
-    // overflow-y:scroll;
-}
 
 h1.pageBadge
 {
     font-size: 300%;
+    font-weight: bold;
 }
 
 .pageContent
@@ -25,28 +10,31 @@ h1.pageBadge
     position: absolute;
     z-index: 20;
     // max-width: 650px;
-    min-height: 200px;
-
     margin-left: auto;  
     margin-right: auto; 
+    padding-left: 10px;
+    padding-right: 10px;
     left: 0; 
     right: 0; 
-    top:20px; 
 
     text-align: justify;
     text-justify: inter-word;
-    pointer-events: none;
+
+    pointer-events: all;
+    height: calc(100vh - 56px);
+    overflow-y:scroll;
 
     
 }
 
+
 .pageBadge {
     /* background-color: rgba(255, 255, 255, 0.6); */
-    padding:5px 15px;
+    padding:5px 25px;
     // color:white;
     margin-left: auto; 
     margin-right: auto; 
-    margin-top: 10px;
+    margin-top: 20px;
     display:block;
     text-align: center;
     pointer-events: none;
@@ -55,23 +43,4 @@ h1.pageBadge
 a 
 {
     color:white;
-}
-
-.pageBody
-{
-    /* width:450px; */
-    /* background-color: rgba(255, 255, 255, 0.6); */
-    min-height: 200px;
-    // max-height: calc(100vh - 400px);
-    // color:white;
-    padding-left:25px;
-    padding-right:25px;
-    left: 0; 
-    right: 0; 
-    top:400px;
-    margin-left: auto; 
-    margin-right: auto; 
-    //line-height:190%;
-    pointer-events: all;
-    // overflow-y: scroll;
 }

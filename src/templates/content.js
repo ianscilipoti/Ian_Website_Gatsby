@@ -29,7 +29,7 @@ export const query = graphql`
 const ContentPage = (props) => {
     const markdownRemark = props.data.markdownRemark;
     return <PageLayout pageName={markdownRemark.frontmatter.title} url={`/${markdownRemark.fields.directory}/${markdownRemark.fields.slug}`} voronoiClipData={props.voronoiClipData} contentWidth={950}>
-        <PageBackground previewImg={markdownRemark.frontmatter.previewImg} />
+        <PageBackground imgSrc={markdownRemark.frontmatter.previewImg.childImageSharp.fixed.src} blur opacity={0.3}/>
         <div dangerouslySetInnerHTML={{__html: props.data.markdownRemark.html}}></div>
         <hr/>
         Return to <Link className = {basicLink} to={`/${markdownRemark.fields.directory}`}>{markdownRemark.fields.directory}</Link>

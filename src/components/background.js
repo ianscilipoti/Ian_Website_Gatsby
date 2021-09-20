@@ -10,7 +10,7 @@ import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBox
 //const boundingBoxSize = 100;
 //const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
-const selectedHighlightMovement = 150;
+const selectedHighlightMovement = 130;
 const animationCutoff = 0.3;
 const dampening = 7;
 const verticalStackBreakpoint = 500;
@@ -334,7 +334,7 @@ const Background1 = (props) =>
             )}
         </div>
         {/* strokes. Could improve performance here probably*/}
-        <div className={voronoiBackground} style={{zIndex:1}}>
+        <div className={voronoiBackground} style={{zIndex:2}}>
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
                 <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true}/>
             )}

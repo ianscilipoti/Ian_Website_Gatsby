@@ -4,8 +4,9 @@ import {page} from '../common/common.module.scss'
 const PageBackground = (props) => 
 {
     // return <img style={{objectFit: "cover", height:"100%", left:"-50%"}} src={props.previewImg.childImageSharp.fixed.src}/>
+    const blurStyle = props.blur ? "blur(3px)" : "none";
     return <div style={{
-        backgroundImage: `url('${props.previewImg.childImageSharp.fixed.src}')`,
+        backgroundImage: `url('${props.imgSrc}')`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         // backgroundPosition: props.centerPt ? `${props.centerPt.x}px ${props.centerPt.y}px` : "center",
@@ -16,8 +17,10 @@ const PageBackground = (props) =>
         width: "100%",
         height: "100%",
         zIndex: "-1",
-        opacity: "0.5",
-        pointerEvents: "none"
+        opacity: props.opacity,
+        pointerEvents: "none",
+        filter: blurStyle,
+        webkitFilter: blurStyle,
     }}/>
 }
 

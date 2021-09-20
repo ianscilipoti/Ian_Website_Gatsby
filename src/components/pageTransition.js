@@ -1,14 +1,14 @@
 import { Transition } from 'react-transition-group'
 import React from 'react'
 
-const duration = 200;
+const duration = 300;
 
 const defaultStyle = {
   
   opacity: 0,
   position: `absolute`,
   width: '100%',
-  zIndex: 2
+  zIndex: 1
 }
 
 const transitionStyles = {

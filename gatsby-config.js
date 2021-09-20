@@ -51,7 +51,7 @@ module.exports = {
         x:15, 
         y:80,
         // color: "#2c4d8f",
-        color: "#718f71",
+        color: "#acc9a1",
         selectedHighlightMovementOverride:90
       }, 
       {
@@ -59,7 +59,7 @@ module.exports = {
         x:80,
         y:95,
         color: "#24736b",
-        selectedHighlightMovementOverride:70,
+        selectedHighlightMovementOverride:60,
         createPolygon: true
       }, 
       // {
@@ -70,12 +70,24 @@ module.exports = {
       //   selectedHighlightMovementOverride:120,
       //   createPolygon: false, 
       // },
-      // {
-      //   identifier: "bg1", 
-      //   x:100, 
-      //   y:70,
-      //   color: "#1a3824",
-      // },
+      {
+        url: "-bg1", 
+        x:76, 
+        y:98,
+        color: "#646e46",
+      },
+      {
+        url: "-bg2", 
+        x:90, 
+        y:94,
+        color: "#5e6e46",
+      },
+      {
+        url: "-bg3", 
+        x:0, 
+        y:80,
+        color: "#5e6e46",
+      },
       // {
       //   identifier: "bg2", 
       //   x:120, 

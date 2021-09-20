@@ -1,24 +1,21 @@
 import React from 'react'
-import {pageContent, pageBadge, pageBody} from './pageLayout.module.scss'
+import {pageContent, pageBadge, pageScrollWindow} from './pageLayout.module.scss'
 import ClipToCell from './clipToCell'
 import {page} from '../common/common.module.scss'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
 
 const PageLayout = (props) => {
-    // return <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === props.url)}>
-        return <div className={page} style={{overflowY:'scroll'}}>
-            {console.log("loaded layout: ", props.url)}
-            <div className={pageContent} style={{maxWidth:`${props.contentWidth}px`}} >
+     return <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === props.url)}>
+         {/* <div className={pageScrollWindow} style={{color:props.textColor}}> */}
+            <div className={pageContent} style={{maxWidth:`${props.contentWidth}px`, color:props.textColor}} >
                 <h1 className={pageBadge}>
                     {props.pageName.toUpperCase()}
                 </h1>
-                <div className={pageBody}>
-                    <hr/>
-                    {props.children}
-                </div>
+                <hr/>
+                {props.children}
             </div>   
-        </div>     
-    // </ClipToCell>
+        {/* </div>      */}
+     </ClipToCell>
 }
 
 PageLayout.defaultProps = {parentDirectory: null, contentWidth: 650, textColor:"black"};

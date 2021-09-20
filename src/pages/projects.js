@@ -24,19 +24,21 @@ const ProjectsPage = (props) => {
     }
   })
 
-  return <div>
-    {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map(cell => 
-      <ClipToCell key={cell.site.url} cell={cell}>
-        <PageBackground previewImg={cell.site.previewImg} scale={0.5} centerPt={{
-            x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
-            y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
-          }}/>
-      </ClipToCell>
-    )};
+  return <React.Fragment>
+    <div>
+      {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map(cell => 
+        <ClipToCell key={cell.site.url} cell={cell}>
+          <PageBackground imgSrc={cell.site.previewImg.childImageSharp.fixed.src} opacity={0.5} scale={0.5} centerPt={{
+              x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
+              y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
+            }}/>
+        </ClipToCell>
+      )};
 
-    {!props.isAnimating ? <PageNames voronoiData={props.voronoiClipData}/> : ""}
-    <h2 className={tutorialText}>Click polygons to explore!</h2>
-  </div>
+      {!props.isAnimating ? <PageNames voronoiData={props.voronoiClipData}/> : ""}
+    </div>
+    {/* <h2 className={tutorialText}>Click polygons to explore!</h2> */}
+  </React.Fragment>
 }
 
 
