@@ -21,7 +21,6 @@ const Layout = ({ children, location }) => {
                 // <Transition location={location} voronoiClipData={voronoiClipData} isAnimating={isAnimating}>
                 //     {children} 
                 // </Transition>   
-                
                 <PageTransition in={!isAnimating && location.key===latestKey}>
                     {React.cloneElement(children, {voronoiClipData: voronoiClipData, isAnimating: isAnimating})} 
                 </PageTransition>

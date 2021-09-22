@@ -5,9 +5,10 @@ import {page} from '../common/common.module.scss'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
 
 const PageLayout = (props) => {
-     return <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === props.url)}>
+
+    return <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === props.url)}>
          {/* <div className={pageScrollWindow} style={{color:props.textColor}}> */}
-            <div className={pageContent} style={{maxWidth:`${props.contentWidth}px`, color:props.textColor}} >
+            <div className={pageContent} style={{maxWidth:`${props.contentWidth}px`, color:props.textColor}} onScroll={props.scrollEvent}>
                 <h1 className={pageBadge}>
                     {props.pageName.toUpperCase()}
                 </h1>

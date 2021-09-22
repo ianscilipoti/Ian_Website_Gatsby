@@ -325,18 +325,31 @@ const Background1 = (props) =>
 
     const isValidCell = (cell) => cell.halfedges != null && cell.halfedges.length;
 
+    const isCellVisible = (cell) => {
+        const areaInfo = getVoronoiAreaInfo();
+        if (areaInfo.type === "group")
+        {
+            return urlWithinGroup(cell.site.url, areaInfo.urlGroup);
+        }
+        else
+        {
+            return voronoiAreas[areaInfo.index].url === cell.site.url;
+        }
+    }
+
     return <React.Fragment>
         {recalculateDiagram()}
         {/* color backgrounds */}
         <div className={voronoiBackground} style={{zIndex:-1}}>
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={cell.site.url} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false}/>
+                <VoronoiPolygon key={cell.site.url} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
             )}
         </div>
         {/* strokes. Could improve performance here probably*/}
         <div className={voronoiBackground} style={{zIndex:2}}>
+            
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true}/>
+                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}

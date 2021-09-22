@@ -17,7 +17,7 @@ const VoronoiPolygon = (props) => {
     }
     else
     {
-        return <svg className={svgVoronoi} viewBox="0 0 100 100" onClick={() => {if(!props.isAnimating){navigate(props.allData.site.url)}}}>
+        return <svg style={{zIndex:props.hasContent?1:-1}} className={svgVoronoi} viewBox="0 0 100 100" onClick={() => {if(!props.isAnimating){navigate(props.allData.site.url)}}}>
             <polygon style={{pointerEvents:"all"}} fill={props.allData.site.color} points={getFormattedPoints}/>
         </svg>
     }
