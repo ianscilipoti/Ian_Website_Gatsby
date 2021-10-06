@@ -16,7 +16,7 @@ import Row from 'react-bootstrap/Row'
 
 const ContactPage = (props) => {
   return <PageLayout pageName="CONTACT" url="/contact" voronoiClipData={props.voronoiClipData} textColor="white">
-    <PageBackground imgSrc={backgroundSrc} opacity={0.03}/>
+    <PageBackground imgSrc={backgroundSrc} opacity={0.15}/>
     <Row>
       <Col>
         <p>If you have any questions about what you see here or business inquiries feel free to reach out. </p>

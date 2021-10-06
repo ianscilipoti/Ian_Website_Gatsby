@@ -46,9 +46,9 @@ const PageNames = (props) =>
     }
       
     return <div>
-        {props.voronoiData.filter(cell => cell.site.previewImg).map((cell) => {
+        {props.voronoiData.filter(cell => cell.site.backgroundImg).map((cell) => {
             const centerPt = getCenterPt(cell);
-            const xPx = voronoiCoordToPixelX(centerPt.x, dimensions.width, dimensions.height);
+            const xPx = voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height);
             const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);
             let positionStyle = {left: `${xPx}px`, top:`${yPx}px`, position:"absolute", pointerEvents:"none", transform:"translateX(-50%)"}//left:`${xPx}px`, 
     

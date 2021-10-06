@@ -33,8 +33,12 @@ module.exports = {
           {
             resolve: 'gatsby-remark-images',
             options: {
-              maxWidth: 750,
+              maxWidth: 850,
               linkImagesToOriginal: false,
+              // showCaptions: true,
+              // markdownCaptions: true,
+              wrapperStyle: 'margin-top:20px; margin-bottom:20px;'
+              
             }
           }
         ]
@@ -52,14 +56,14 @@ module.exports = {
         y:80,
         // color: "#2c4d8f",
         color: "#acc9a1",
-        selectedHighlightMovementOverride:90
+        selectedHighlightMovementOverride:115
       }, 
       {
         url: "/contact",
         x:80,
         y:95,
         color: "#24736b",
-        selectedHighlightMovementOverride:60,
+        selectedHighlightMovementOverride:75,
         createPolygon: true
       }, 
       // {

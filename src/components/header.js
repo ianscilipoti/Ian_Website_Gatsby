@@ -28,8 +28,9 @@ const Header = () => {
             <Nav className="ms-auto">
             <Link className="nav-link" to="/">about</Link>
                 <Link className="nav-link" to="/contact">contact</Link>
+                <Link className="nav-link" to="/projects">projects</Link>
                 {/* <Link className="nav-link" to="/projects">projects</Link> */}
-                <NavDropdown title="projects" id="collasible-nav-dropdown">
+                {/* <NavDropdown title="projects" id="collasible-nav-dropdown">
    
                     <NavDropdown.Item onClick={() => navigate('/projects/')}>
                         all
@@ -38,7 +39,7 @@ const Header = () => {
                     {pagesQuery.allMarkdownRemark.edges.map(edge => <NavDropdown.Item key={edge.node.fields.slug} onClick={()=>navigate(`/projects/${edge.node.fields.slug}`)}>
                         {edge.node.fields.slug}
                     </NavDropdown.Item>)}
-                </NavDropdown>
+                </NavDropdown> */}
                 {/* <Link className="nav-link" to="/blog">blog</Link> */}
                 
                 

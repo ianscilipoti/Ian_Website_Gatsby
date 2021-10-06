@@ -7,7 +7,6 @@ h1.pageBadge
 
 .pageContent
 {
-    position: absolute;
     z-index: 20;
     // max-width: 650px;
     margin-left: auto;  
@@ -19,14 +18,17 @@ h1.pageBadge
 
     text-align: justify;
     text-justify: inter-word;
+    line-height: 2;
 
     pointer-events: all;
-    height: calc(100vh - 56px);
-    overflow-y:scroll;
-
-    
 }
 
+.pageScrollWindow {
+    width: 100%;
+    height: calc(100vh - 56px);
+    overflow-y:scroll; 
+    pointer-events: all;
+}
 
 .pageBadge {
     /* background-color: rgba(255, 255, 255, 0.6); */

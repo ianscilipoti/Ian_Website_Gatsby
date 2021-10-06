@@ -10,7 +10,7 @@ import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBox
 //const boundingBoxSize = 100;
 //const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
-const selectedHighlightMovement = 130;
+const selectedHighlightMovement = 200;
 const animationCutoff = 0.3;
 const dampening = 7;
 const verticalStackBreakpoint = 500;
@@ -50,7 +50,7 @@ const Background1 = (props) =>
                         color
                         title
                         description
-                        previewImg {
+                        backgroundImg {
                             childImageSharp {
                                 fixed(width: 1000, quality: 90) {
                                     src
@@ -146,7 +146,7 @@ const Background1 = (props) =>
                 {
                     const thisAreaData = voronoiAreas[i];
                     const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup); 
-                    const padding = 10;
+                    const padding = 5;
 
                     //arrange group url areas to fill entire screen. All other areas drop down
                     if (isWithinUrlGroup)
