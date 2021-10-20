@@ -3,20 +3,30 @@ import PageLayout from '../components/pageLayout'
 import PageBackground from '../components/pageBackground'
 import {emailButton} from './contact.module.scss'
 import {buttonBase} from '../common/common.module.scss'
+import { graphql, useStaticQuery } from 'gatsby'
 // import Img from "gatsby-image"
 // import { useStaticQuery } from "gatsby";
 import face from './me.jpeg';
-import backgroundSrc from './contactbg.png';
 import Image from 'react-bootstrap/Image'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 
 
-
-
 const ContactPage = (props) => {
+  const backgroundImage = useStaticQuery(graphql`
+    query {
+      file(relativePath: {eq: "pages/contactbg.jpg"}) {
+        childImageSharp {
+          gatsbyImageData (
+            placeholder: BLURRED
+          )
+        }
+      }
+
+    }
+  `)
   return <PageLayout pageName="CONTACT" url="/contact" voronoiClipData={props.voronoiClipData} textColor="white">
-    <PageBackground imgSrc={backgroundSrc} opacity={0.15}/>
+    <PageBackground imgSrc={backgroundImage.file} blur opacity={0.15}/>
     <Row>
       <Col>
         <p>If you have any questions about what you see here or business inquiries feel free to reach out. </p>

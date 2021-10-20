@@ -1,29 +1,44 @@
 import React from 'react'
-import {page} from '../common/common.module.scss'
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 //props.cell
 const PageBackground = (props) => 
 {
-    // return <img style={{objectFit: "cover", height:"100%", left:"-50%"}} src={props.previewImg.childImageSharp.fixed.src}/>
     const blurStyle = props.blur ? "blur(5px)" : "none";
-    console.log(props.offset)
-    return <div style={{
-        backgroundImage: `url('${props.imgSrc}')`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        // backgroundPosition: props.centerPt ? `${props.centerPt.x}px ${props.centerPt.y}px` : "center",
-        backgroundPosition: "center",
-        position: "fixed",
-        top: props.centerPt ? `calc(${props.centerPt.y + props.offset}px - 50%)` : `${props.offset}px`,
-        left: props.centerPt ? `calc(${props.centerPt.x}px - 50%)` : "0px",
-        width: "120%",
-        height: "120%",
-        zIndex: "-1",
-        opacity: props.opacity,
-        pointerEvents: "none",
+    
+    const imgStyle = {
+        zIndex:-1,
         filter: blurStyle,
         WebkitFilter: blurStyle,
-    }}/>
+        width: props.centerPt ? "100%" : "120%",
+        height: props.centerPt ? "100%" : "120%",
+        opacity: props.opacity,
+        position:"absolute",
+    };
+    const wrapperStyle = {
+        left:"0px",
+        top:"0px",
+        position:"absolute",
+        overflow:"hidden",
+        width:"100%",
+        height:"100%",
+        pointerEvents: "none",
+        zIndex:-1,
+    } 
+    return <div style={wrapperStyle}>
+            <div style={{
+                position:"absolute", 
+                width:"100%", 
+                height:"100%",
+                top: props.centerPt ? `${props.centerPt.y}px` : `${props.offset}px`, 
+                left: props.centerPt ? `${props.centerPt.x}px` : "50%",
+                transform: props.centerPt ? "translate(-50%, -50%)" : "translateX(-50%)",
+                }}>
+
+                <GatsbyImage style={imgStyle} image={getImage(props.imgSrc)} alt=""/>
+            </div>
+        </div>
+    
 }
 
-PageBackground.defaultProps = {offset: 0};
+PageBackground.defaultProps = {offset: 0, centerPt: false};
 export default PageBackground

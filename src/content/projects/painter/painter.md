@@ -3,23 +3,23 @@ title: painter
 description: A painting algorithm
 previewImg: preview.png
 backgroundImg: background.png
-x: 90
-y: 20
+x: 50
+y: 10
 color: "#c9986d"
 ---
 The painter project was an early experiment in the processing framework/language. The goal was an algorithm that could paint. The paintings should be more than just some filters but rather a series of brush strokes. 
 
-![A painting of a lake](./paintedlake.png)
+<div style="padding:65% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/636471719?h=dd0a616918&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="painter_demo.mp4"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 How It Works
 ---
 
-In order to paint, the program needed the ability to apply a paint stroke to a canvas. As such, the project has the framework of a basic painting program built in. This means different brushes, different brush sizes, and the ability to specify a brush stroke. 
+Internally, the project has a framework of a basic painting built in. This includes different brushes, different brush sizes, and the ability to specify a brush stroke. 
 
 ![A painting of a pond](./paintedpond.png)
 
-Next is the issue of how the program would know what brush strokes to apply. The naive but successful answer is to just try random paint strokes and only keep the ones that 'improve' the overal painting. This improvement is measured in total pixel difference accross the entire canvas. 
+The program creates random brush strokes and applies them to the canvas. After each stroke, the canvas is compared to the goal image. If the recently added stroke made the canvas more similar to the goal image, it is kept. Otherwise the stroke is undone and a new stroke is generated.  
 
-![A painting of a rainbow](./paintedrainbow.png)
+![A painting of a lake](./paintedlake.png)
 
 

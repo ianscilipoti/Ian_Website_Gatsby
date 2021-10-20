@@ -2,8 +2,8 @@ import React from 'react'
 import Header from './header'
 import Background from './background'
 import './layout.module.scss'
-import Transition from "../components/transition"
 import PageTransition from '../components/pageTransition'
+import '../common/common.module.scss'
 
 
 const Layout = ({ children, location }) => {
@@ -14,19 +14,19 @@ const Layout = ({ children, location }) => {
         setLatestKey(location.key);
     }
 
-    return <div>
+    return <React.Fragment>
         <Header />
         <Background animationFinished={animationFinished}>
             {(voronoiClipData, isAnimating) => 
                 // <Transition location={location} voronoiClipData={voronoiClipData} isAnimating={isAnimating}>
                 //     {children} 
-                // </Transition>   
+                // </Transition>
                 <PageTransition in={!isAnimating && location.key===latestKey}>
                     {React.cloneElement(children, {voronoiClipData: voronoiClipData, isAnimating: isAnimating})} 
                 </PageTransition>
             }
         </Background>
-    </div>
+    </React.Fragment>
 }
 
 export default Layout

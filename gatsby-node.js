@@ -11,8 +11,6 @@ const path = require('path')
 exports.onCreateNode = ({node, actions}) => {
   const { createNodeField} = actions
 
-  console.log(node.internal.type, "\n");
-
   if (node.internal.type === 'MarkdownRemark') {
     
     const slug = path.basename(node.fileAbsolutePath, '.md')

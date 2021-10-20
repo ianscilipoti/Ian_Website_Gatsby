@@ -1,14 +1,21 @@
+@font-face {
+    font-family: "Poppins";
+    src: url("../fonts/Poppins-ExtraLight.ttf");
+}
+
+html *
+{
+    font-family: "Poppins", "Lucida Console", "Arial";
+}
+
+body { margin:0; }
 
 .page
 {
-    /* background-image: url("pepper.png"); */
     width: 100%;
     height: calc(100vh - 60px);
     position:absolute;
-    // pointer-events: none;
-    // overflow-y:scroll;
 }
-// $color: green;
 
 .buttonBase
 {

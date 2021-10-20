@@ -1,7 +1,7 @@
 import { Transition } from 'react-transition-group'
 import React from 'react'
 
-const duration = 300;
+const duration = 420;
 
 const defaultStyle = {
   

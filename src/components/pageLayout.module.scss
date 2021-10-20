@@ -11,23 +11,26 @@ h1.pageBadge
     // max-width: 650px;
     margin-left: auto;  
     margin-right: auto; 
-    padding-left: 50px;
-    padding-right: 50px;
+    padding-left: 70px;
+    padding-right: 70px;
     left: 0; 
     right: 0; 
 
-    text-align: justify;
-    text-justify: inter-word;
+    // text-align: justify;
+    // text-justify: inter-word;
     line-height: 2;
 
     pointer-events: all;
+
 }
 
 .pageScrollWindow {
     width: 100%;
     height: calc(100vh - 56px);
-    overflow-y:scroll; 
+    // overflow-y:scroll; 
+    overflow-x:hidden;
     pointer-events: all;
+    -webkit-overflow-scrolling: touch;
 }
 
 .pageBadge {

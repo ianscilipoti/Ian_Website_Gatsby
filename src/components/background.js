@@ -4,15 +4,13 @@ import Voronoi from 'voronoi'
 import VoronoiPolygon from './voronoiPolygon'
 import {voronoiBackground} from './background.module.scss'
 import { useStaticQuery, graphql } from 'gatsby'
-import {voronoiCoordToPixelX, voronoiCoordToPixelY, boundingBoxSize, boundingBoxPadding} from '../common/common.js'
+import {boundingBoxSize, boundingBoxPadding} from '../common/common.js'
 
 //consts
-//const boundingBoxSize = 100;
-//const boundingBoxPadding = 100;
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
-const selectedHighlightMovement = 200;
+const selectedHighlightMovement = 170;
 const animationCutoff = 0.3;
-const dampening = 7;
+const dampening = 5.5;
 const verticalStackBreakpoint = 500;
 
 const invLerp = (a, b, v) => 
@@ -55,6 +53,10 @@ const Background1 = (props) =>
                                 fixed(width: 1000, quality: 90) {
                                     src
                                 }
+                                gatsbyImageData (
+                                    placeholder: BLURRED
+                                    quality: 100
+                                )
                             }
                             relativePath
                         }
@@ -68,11 +70,10 @@ const Background1 = (props) =>
         }
     }`)
     const location = useLocation()
-    const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData
-    .concat(
+    const voronoiAreas = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageVoronoiData.concat(
         voronoiInfoQuery.allMarkdownRemark.edges.map(edge => ({...edge.node.frontmatter, url:`/${edge.node.fields.directory}/${edge.node.fields.slug}`}))
-    );//.filter(area => !(area.hasOwnProperty("createPolygon") && area.createPolygon === false));
-        // debugger;
+    );
+    
     const [voronoiPositions, setVoronoiPositions] = useState(voronoiAreas.map(area => ({...area})));
     const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
         {height: window.innerHeight, width: window.innerWidth} : 
@@ -85,9 +86,6 @@ const Background1 = (props) =>
     let desiredVoronoiPositions = useRef(voronoiAreas.map(area => ({x: area.x, y: area.y})));
     
     let animationRequestRef = useRef();
-
-
-
 
     React.useEffect(() => {
         function handleResize() {
@@ -129,7 +127,7 @@ const Background1 = (props) =>
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
                     const thisAreaData = voronoiAreas[i];
-                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup);//.startsWith(currentPageInfo.urlGroup); 
+                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup) && !thisAreaData.url.includes("-"); //- char is used to indicate bg polys
                     if (isWithinUrlGroup)
                     {
                         groupBounds.minX = Math.min(groupBounds.minX, thisAreaData.x);
@@ -145,7 +143,8 @@ const Background1 = (props) =>
                 for (let i = 0; i < voronoiAreas.length; i ++)
                 {
                     const thisAreaData = voronoiAreas[i];
-                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup); 
+                    const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup);
+                    const isBackgroundPoly = thisAreaData.url.includes("-");
                     const padding = 5;
 
                     //arrange group url areas to fill entire screen. All other areas drop down
@@ -154,6 +153,7 @@ const Background1 = (props) =>
                         
                         if (dimensions.width > verticalStackBreakpoint)
                         {
+                            
                             newDesiredPositions.push(
                                 {
                                     x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
@@ -163,12 +163,24 @@ const Background1 = (props) =>
                         }
                         else
                         {
-                            const rowHeight = boundingBoxSize/(numWithinGroup+1);
-                            newDesiredPositions.push({
-                                //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
-                                x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.1 + 0.9*((groupBounds.minX + groupBounds.maxX)/2),
-                                y: (numSeenWithinGroup+1)*rowHeight + rowHeight/2
-                            });
+                            if(!isBackgroundPoly)
+                            {
+                                const rowHeight = boundingBoxSize/(numWithinGroup+1);
+                                newDesiredPositions.push({
+                                    //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
+                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.05 + 0.95*((groupBounds.minX + groupBounds.maxX)/2),
+                                    y: (numSeenWithinGroup+1)*rowHeight 
+                                });
+                            }
+                            else
+                            {
+                                newDesiredPositions.push(
+                                    {
+                                        x: 1000,
+                                        y: -i*boundingBoxSize
+                                    }
+                                );  
+                            }
                         }
                         numSeenWithinGroup++;
                     }
@@ -329,7 +341,7 @@ const Background1 = (props) =>
         const areaInfo = getVoronoiAreaInfo();
         if (areaInfo.type === "group")
         {
-            return urlWithinGroup(cell.site.url, areaInfo.urlGroup);
+            return urlWithinGroup(cell.site.url, areaInfo.urlGroup) && !cell.site.url.includes("-");
         }
         else
         {
@@ -342,14 +354,14 @@ const Background1 = (props) =>
         {/* color backgrounds */}
         <div className={voronoiBackground} style={{zIndex:-1}}>
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={cell.site.url} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
+                <VoronoiPolygon key={cell.site.url} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
             )}
         </div>
         {/* strokes. Could improve performance here probably*/}
         <div className={voronoiBackground} style={{zIndex:2}}>
             
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={i} id={i} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />
+                <VoronoiPolygon key={i} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />
             )}
         </div>
         {/* pass the cells down to be used for clipping / animations */}

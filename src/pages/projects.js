@@ -1,6 +1,5 @@
 import React from 'react'
 import PageNames from '../components/pageNames'
-import {tutorialText} from './projects.module.scss'
 import ClipToCell from '../components/clipToCell'
 import PageBackground from '../components/pageBackground'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
@@ -25,10 +24,9 @@ const ProjectsPage = (props) => {
   })
 
   return <React.Fragment>
-    <div>
       {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map(cell => 
         <ClipToCell key={cell.site.url} cell={cell}>
-          <PageBackground imgSrc={cell.site.backgroundImg.childImageSharp.fixed.src} opacity={0.5} scale={0.5} centerPt={{
+          <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.7} scale={0.5} centerPt={{
               x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
               y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
             }}/>
@@ -36,8 +34,6 @@ const ProjectsPage = (props) => {
       )}
 
       {!props.isAnimating ? <PageNames voronoiData={props.voronoiClipData}/> : "POOOOOOOO"}
-    </div>
-    {/* <h2 className={tutorialText}>Click polygons to explore!</h2> */}
   </React.Fragment>
 }
 
