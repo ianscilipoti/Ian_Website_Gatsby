@@ -1,16 +1,16 @@
 import React from 'react'
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
-//props.cell
+
 const PageBackground = (props) => 
 {
-    const blurStyle = props.blur ? "blur(5px)" : "none";
+    const blurStyle = props.blur ? `blur(${props.blur}px)` : "none";
     
     const imgStyle = {
         zIndex:-1,
         filter: blurStyle,
         WebkitFilter: blurStyle,
-        width: props.centerPt ? "100%" : "120%",
-        height: props.centerPt ? "100%" : "120%",
+        width: props.centerPt ? "100%" : "150%",
+        height: props.centerPt ? "100%" : "150%",
         opacity: props.opacity,
         position:"absolute",
     };

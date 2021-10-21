@@ -4,14 +4,14 @@ import Voronoi from 'voronoi'
 import VoronoiPolygon from './voronoiPolygon'
 import {voronoiBackground} from './background.module.scss'
 import { useStaticQuery, graphql } from 'gatsby'
-import {boundingBoxSize, boundingBoxPadding} from '../common/common.js'
+import {boundingBoxSize, boundingBoxPadding, headerHeightPx, minPageHeight} from '../common/common.js'
 
 //consts
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 170;
 const animationCutoff = 0.3;
 const dampening = 5.5;
-const verticalStackBreakpoint = 500;
+const verticalStackBreakpoint = 750;
 
 const invLerp = (a, b, v) => 
 {
@@ -147,6 +147,9 @@ const Background1 = (props) =>
                     const isBackgroundPoly = thisAreaData.url.includes("-");
                     const padding = 5;
 
+                    const minHeightScaler = Math.min((dimensions.height / minPageHeight), 1);
+                    const minHeightOffset = (1 - minHeightScaler) * boundingBoxSize * 0.5;
+
                     //arrange group url areas to fill entire screen. All other areas drop down
                     if (isWithinUrlGroup)
                     {
@@ -157,7 +160,7 @@ const Background1 = (props) =>
                             newDesiredPositions.push(
                                 {
                                     x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
-                                    y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize
+                                    y: invLerp(groupBounds.minY - padding, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize * minHeightScaler + minHeightOffset
                                 }
                             );    
                         }
@@ -165,11 +168,12 @@ const Background1 = (props) =>
                         {
                             if(!isBackgroundPoly)
                             {
-                                const rowHeight = boundingBoxSize/(numWithinGroup+1);
+                                
+                                const rowHeight = (boundingBoxSize/(numWithinGroup+1))*minHeightScaler;
                                 newDesiredPositions.push({
                                     //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
                                     x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.05 + 0.95*((groupBounds.minX + groupBounds.maxX)/2),
-                                    y: (numSeenWithinGroup+1)*rowHeight 
+                                    y: (numSeenWithinGroup+1)*rowHeight + minHeightOffset
                                 });
                             }
                             else
@@ -352,13 +356,13 @@ const Background1 = (props) =>
     return <React.Fragment>
         {recalculateDiagram()}
         {/* color backgrounds */}
-        <div className={voronoiBackground} style={{zIndex:-1}}>
+        <div className={voronoiBackground} style={{zIndex:-1, height:(dimensions.height - headerHeightPx)}}>
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
                 <VoronoiPolygon key={cell.site.url} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
             )}
         </div>
         {/* strokes. Could improve performance here probably*/}
-        <div className={voronoiBackground} style={{zIndex:2}}>
+        <div className={voronoiBackground} style={{zIndex:2, height:(dimensions.height - headerHeightPx)}}>
             
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
                 <VoronoiPolygon key={i} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />

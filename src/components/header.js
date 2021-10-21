@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container'
 
 const Header = () => {
 
-    return <Navbar style={{zIndex:3}} collapseOnSelect="true"  bg="dark" variant="dark" expand="sm">
+    return <Navbar style={{zIndex:3}} collapseOnSelect="true"  bg="dark" variant="dark" expand="sm" fixed="top">
         <Container>
             <Link className="navbar-brand" to="/">IAN SCILIPOTI</Link>
             <Navbar.Toggle aria-controls="responsive-navbar-nav" />

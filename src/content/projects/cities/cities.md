@@ -2,7 +2,7 @@
 title: cities
 description: A procedural city generator
 previewImg: preview.png
-backgroundImg: background.png
+backgroundImg: background1.png
 x: 95
 y: 5
 color: "#c3c7c9"

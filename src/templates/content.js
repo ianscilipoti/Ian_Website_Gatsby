@@ -3,6 +3,8 @@ import PageLayout from '../components/pageLayout'
 import { graphql, Link } from 'gatsby'
 import {basicLink} from '../common/common.module.scss'
 import PageBackground from '../components/pageBackground'
+import ClipToCell from '../components/clipToCell'
+
 
 
 export const query = graphql`
@@ -32,21 +34,31 @@ export const query = graphql`
 
 const ContentPage = (props) => {
     const [scrollPos, setScrollPos] = React.useState(0);
-    const scrollEvent = (e) => {
-        // console.log('Current scroll position:', e.target.scrollTop);
-        setScrollPos(e.target.scrollTop);
-    }
+    React.useEffect(() => {
+        function handleScroll() {
+          setScrollPos(document.body.scrollTop || document.documentElement.scrollTop);
+        }
+        window.addEventListener('scroll', handleScroll)
+
+        return _ => {
+            window.removeEventListener('scroll', handleScroll)
+        }
+    })
     const markdownRemark = props.data.markdownRemark;
-    return <PageLayout parentPage="projects" scrollEvent={scrollEvent} pageName={markdownRemark.frontmatter.title} url={`/${markdownRemark.fields.directory}/${markdownRemark.fields.slug}`} voronoiClipData={props.voronoiClipData} contentWidth={1200}>
-        <PageBackground imgSrc={markdownRemark.frontmatter.backgroundImg} offset={-scrollPos/6} blur opacity={0.2}/>
-        <div style={{fontSize:"110%"}} dangerouslySetInnerHTML={{__html: props.data.markdownRemark.html}}></div>
-        <hr/>
-        Return to <Link className = {basicLink} to={`/${markdownRemark.fields.directory}`}>{markdownRemark.fields.directory}</Link>
-        <br/>
-        <br/>
-        <br/>
-    </PageLayout>
-    // return <div></div>
+    return <React.Fragment>
+        <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === `/${markdownRemark.fields.directory}/${markdownRemark.fields.slug}`)}>
+            <PageBackground imgSrc={markdownRemark.frontmatter.backgroundImg} offset={-scrollPos/6} blur={5} opacity={0.3}/>
+        </ClipToCell>
+
+        <PageLayout parentPage="projects" pageName={markdownRemark.frontmatter.title} >
+            <div style={{fontSize:"110%"}} dangerouslySetInnerHTML={{__html: props.data.markdownRemark.html}}></div>
+            <hr/>
+            Return to <Link className = {basicLink} to={`/${markdownRemark.fields.directory}`}>{markdownRemark.fields.directory}</Link>
+            <br/>
+            <br/>
+            <br/>
+        </PageLayout>
+    </React.Fragment>
 }
 
 

@@ -1,5 +1,5 @@
 ---
-title: Low Poly Terrain
+title: Terrain
 description: A procedural terrain generator and low poly terrain engine
 previewImg: preview.png
 backgroundImg: background.png
@@ -8,10 +8,9 @@ y: 20
 color: "#acd4a9"
 ---
 The low poly terrain project began as experimentation with [Delaunay triangulations](https://en.wikipedia.org/wiki/Delaunay_triangulation). After some research, I settled on an implementation and set to work on a practical application. Delaunay triangulations seemed like the perfect tool for creating a "low poly" aesthetic. Thus, the project began. 
+<div style="padding:55% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/636569806?h=cb4c6bce5e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="LowPoly Demo"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
-
-<!-- ![An example of river/terrain generation](./RiverScreenshot.png) -->
-<div style="padding:75% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/636569806?h=cb4c6bce5e&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="LowPoly Demo"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+<br>
 
 WORLD GENERATION
 -----------

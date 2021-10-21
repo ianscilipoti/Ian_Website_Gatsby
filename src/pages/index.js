@@ -8,7 +8,12 @@ import PageBackground from '../components/pageBackground'
 import {highlight, textBlock} from './index.module.scss'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
+import ClipToCell from '../components/clipToCell'
+import {sm} from '../common/common.js'
+import bg from './indexbg5.jpg'
 
+import {svgPolygon, voronoiBackground} from '../common/common.module.scss'
+import VoronoiPolygon from "../components/voronoiPolygon";
 
 const ResizableCarousel = (props) => {
   const projectData = props.projectData;
@@ -67,11 +72,7 @@ const IndexPage = (props) => {
     }
   `)
   const [scrollPos, setScrollPos] = React.useState(0);
-  const scrollEvent = (e) => {
-    // console.log('Current scroll position:', e.target.scrollTop);
-    setScrollPos(e.target.scrollTop);
-  }
-  const sm = 768; //small size
+ 
 
   const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
         {height: window.innerHeight, width: window.innerWidth} : 
@@ -79,93 +80,68 @@ const IndexPage = (props) => {
     
   React.useEffect(() => {
         function handleResize() {
-        setDimensions({
-            height: window.innerHeight,
-            width: window.innerWidth
-        })
+          setDimensions({
+              height: window.innerHeight,
+              width: window.innerWidth
+          })
+        }
+        function handleScroll(event) {
+          setScrollPos(window.scrollY);
         }
         window.addEventListener('resize', handleResize)
+        window.addEventListener('scroll', handleScroll)
 
         return _ => {
             window.removeEventListener('resize', handleResize)
+            window.removeEventListener('scroll', handleScroll)
         }
   })
 
-  return <PageLayout pageName="WELCOME" url="/" voronoiClipData={props.voronoiClipData} contentWidth={1150} scrollEvent={scrollEvent} textColor={"white"} >
-      <PageBackground imgSrc={projectData.file} opacity={0.08} blur offset={-scrollPos/6}/>
+  const isLg = dimensions.width > sm;
 
+  return <React.Fragment>
+    <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === "/")}>
+      <PageBackground imgSrc={projectData.file} opacity={0.08} blur={5} offset={-scrollPos/6}/>
+    </ClipToCell>
+
+    {/* <div className={voronoiBackground} style={{zIndex:-1}}>
+      <VoronoiPolygon id={"indeximg"} allData={props.voronoiClipData.find(cell => cell.site.url === "/")} isAnimating={props.isAnimating} renderStrokeOnly={false} hasContent={true} img={bg}/>
+    </div> */}
+    
+    <PageLayout pageName="WELCOME" textColor={"white"} >
+      
       <Row sm={1} md={2} xs={1}>
         <Col>
-          <p className={textBlock} style={{width:"83%", marginLeft:"auto", paddingTop: "0px"}}>
-            <span className={highlight}> I am a developer </span> and hobbiest based out of upstate New York. My formal education is in Computer Science. 
+          <p className={textBlock} style={isLg ? {width:"83%", marginLeft:"auto", paddingTop:0} : {paddingTop:0}}>
+            <span className={highlight}> I am a developer </span> and hobbyist based out of upstate New York. My formal education is in Computer Science. 
           </p>
 
-          <p className={textBlock} style={{width:"90%", marginRight:"auto"}}>
+          <p className={textBlock} style={isLg > sm ? {width:"90%", marginRight:"auto"} : {}}>
             <span className={highlight}>My passion </span> lies in the intersection of 
             creativitiy and technology. At heart, my work is a consequence of my drive to learn and explore. 
           </p>
 
-          <p className={textBlock} style={{width:"90%", marginRight:"auto", marginLeft:"15px"}}>
+          {!isLg && <ResizableCarousel height={300} projectData={projectData}/>}
+
+          <p className={textBlock} style={isLg ? {width:"90%", marginRight:"auto", marginLeft:"15px"} : {}}>
             <span className={highlight}>Please explore </span> the projects outlined on this website.
             These projects began with a fascination in specific technologies and grew into the creative visually oriented projects I describe on this site. 
           </p>
-
-          {dimensions.width < sm && <ResizableCarousel height={300} projectData={projectData}/>}
-
-          
 
           
         </Col>
 
         <Col>
-          {dimensions.width > sm && <ResizableCarousel height={400} projectData={projectData}/>}
+          {isLg && <ResizableCarousel height={400} projectData={projectData}/>}
         </Col>
       </Row>
 
-      <p className={textBlock} style={{width:"min(500px, 90%)", marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>    
-            <span className={highlight}>The design </span>
-            of this website is centered around the Voronoi diagram. The Voronoi diagram is a staple of procedural content generation and one of the many mathematical and algorithmic concepts I use in my work. 
-          </p>
-      {/* <div className={backgroundBanner} style={{backgroundColor:"#9A6965"}}>
-      <div className={backgroundBannerImg} style={{backgroundImage:`url(${bg1})`}}/>
-        <div className={backgroundBannerChild} style={{top:"30px"}}> 
-          <Row>
-            <Col>
-              <Image width={175} style={{left:"50%", transform:"translateX(-50%)", position:"relative"}} src={face} roundedCircle />
-            </Col>
-            <Col>
-              <p className={textBlock} style={{width:"70%", position:"relative", marginLeft:"auto", marginRight:"auto", top:"50%", transform:"translateY(-50%)", paddingTop: "0px"}}>
-                <span className={highlight}> I am a </span> developer and hobbiest based out of upstate New York. My formal education is in Computer Science. 
-              </p>
-            </Col>
-          </Row>
-        </div>
-      </div>
-
-      <div className={backgroundBanner} style={{transform:"rotate(4deg)", backgroundColor:"#69659A", marginTop:"-100px"}}>
-        
-        <div className={backgroundBannerChild} style={{transform:"rotate(-4deg)", top:"30px"}}> 
-          <Row>
-            <Col>
-              <p className={textBlock} style={{width:"70%", position:"relative", marginLeft:"auto", marginRight:"auto", top:"50%", transform:"translateY(-50%)", paddingTop: "0px"}}>
-                <span className={highlight}>My pashion </span> lies in the intersection of creativitiy and technology. 
-              </p>
-            </Col>
-            <Col>
-              <ResizableCarousel height={400} projectData={projectData}/>
-            </Col>
-          </Row>
-        </div>
-      </div>
-
-      <div className={backgroundBanner} style={{transform:"rotate(-2deg)", backgroundColor:"#659A69", paddingBottom:"200px", marginTop:"-100px", marginBottom:"-50px"}}>
-        <div className={backgroundBannerChild} style={{transform:"rotate(2deg)", top:"30px"}}> 
-          <p className={textBlock} style={{width:"70%", position:"relative", marginLeft:"auto", marginRight:"auto", paddingTop: "0px"}}>
-            <span className={highlight}> I am a </span> developer and hobbiest based out of upstate New York. My formal education is in Computer Science. 
-          </p>
-        </div>
-      </div> */}
+      <p className={textBlock} style={{maxWidth:"500px", marginLeft:"auto", marginRight:"auto", marginTop:"10px"}}>    
+        <span className={highlight}>The design </span>
+        of this website is centered around the Voronoi diagram. The Voronoi diagram is a staple of procedural content generation and one of the many mathematical and algorithmic concepts I use in my work. 
+      </p>
   </PageLayout>
+  </React.Fragment>
 }
 
 export default IndexPage

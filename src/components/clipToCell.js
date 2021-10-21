@@ -36,10 +36,9 @@ const ClipToCell = (props) =>
     }
     const polygonStr = getOurClipData();
 
-    return <div className={page} style={{"clipPath": polygonStr, "WebkitClipPath":polygonStr, pointerEvents: "none"}}>
+    return <div className={page} style={{"clipPath": polygonStr, "WebkitClipPath":polygonStr, pointerEvents: "none", position:"fixed", zIndex:-1}}>
         {props.children}
     </div>
-
 }
 
 export default ClipToCell

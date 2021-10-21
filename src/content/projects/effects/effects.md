@@ -2,7 +2,7 @@
 title: effects
 description: Special effects in Unity3D
 previewImg: preview.png
-backgroundImg: background.png
+backgroundImg: background1.png
 x: 15
 y: 5
 color: "#93c2b0"

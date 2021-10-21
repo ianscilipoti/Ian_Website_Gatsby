@@ -1,5 +1,6 @@
 import React from 'react'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
+import {page} from '../common/common.module.scss'
 
 const PageNames = (props) => 
 {
@@ -21,7 +22,7 @@ const PageNames = (props) =>
         }
     })
       
-    return <div>
+    return <div className={page}>
         {props.voronoiData.filter(cell => cell.site.backgroundImg).map((cell) => {
             const xPx = voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height);
             const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);

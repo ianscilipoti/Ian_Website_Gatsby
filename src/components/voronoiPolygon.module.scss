@@ -1,10 +1,14 @@
 .svgVoronoi 
 {
     height:calc(100vh - 56px);
+    // height:100vh;
     min-height: 750px;
+    height:100%;
     position:absolute;
     left:50%;
-    transform:translateX(-50%);
+    // transform:translateX(-50%);
+    transform:translate(-50%, -50%);
+    top:50%;
     overflow:visible;
     pointer-events: none;
 }

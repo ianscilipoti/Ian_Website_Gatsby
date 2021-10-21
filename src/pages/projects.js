@@ -22,18 +22,20 @@ const ProjectsPage = (props) => {
       window.removeEventListener('resize', handleResize)
     }
   })
+  // const cols = ["red", "green", "yellow", "blue", "purple", "orange", "cyan"];
 
   return <React.Fragment>
-      {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map(cell => 
+      {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map((cell, i) => 
         <ClipToCell key={cell.site.url} cell={cell}>
-          <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.7} scale={0.5} centerPt={{
+          <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.35} blur={1} scale={0.5} centerPt={{
               x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
               y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
             }}/>
+            {/* <div style={{backgroundColor:cols[i], width:"100%", height:"100%"}}/> */}
         </ClipToCell>
       )}
 
-      {!props.isAnimating ? <PageNames voronoiData={props.voronoiClipData}/> : "POOOOOOOO"}
+      {!props.isAnimating && <PageNames voronoiData={props.voronoiClipData}/>}
   </React.Fragment>
 }
 

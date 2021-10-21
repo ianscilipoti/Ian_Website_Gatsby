@@ -8,8 +8,9 @@ y: 20
 color: "#a39983"
 ---
 This project began as two separate side projects. One being a destructible 2D world using the Marching Squares algorithm. The other being an algorithm to generate 2D shadows for point light sources. 
+<div style="padding:55% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/636559926?h=9ef1a03117&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="lighting_demo"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
-<div style="padding:60.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/636559926?h=9ef1a03117&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="lighting_demo"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+<br>
 
 The World
 ----

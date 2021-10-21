@@ -8,7 +8,8 @@ const defaultStyle = {
   opacity: 0,
   position: `absolute`,
   width: '100%',
-  zIndex: 1
+  zIndex: 1,
+  // marginTop:"56px"
 }
 
 const transitionStyles = {

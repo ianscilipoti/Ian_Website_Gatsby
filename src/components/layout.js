@@ -1,7 +1,6 @@
 import React from 'react'
 import Header from './header'
 import Background from './background'
-import './layout.module.scss'
 import PageTransition from '../components/pageTransition'
 import '../common/common.module.scss'
 
@@ -16,16 +15,15 @@ const Layout = ({ children, location }) => {
 
     return <React.Fragment>
         <Header />
-        <Background animationFinished={animationFinished}>
-            {(voronoiClipData, isAnimating) => 
-                // <Transition location={location} voronoiClipData={voronoiClipData} isAnimating={isAnimating}>
-                //     {children} 
-                // </Transition>
-                <PageTransition in={!isAnimating && location.key===latestKey}>
-                    {React.cloneElement(children, {voronoiClipData: voronoiClipData, isAnimating: isAnimating})} 
-                </PageTransition>
-            }
-        </Background>
+        <div style={{marginTop:"56px"}}>
+            <Background animationFinished={animationFinished}>
+                {(voronoiClipData, isAnimating) => 
+                    <PageTransition in={!isAnimating && location.key===latestKey}>
+                        {React.cloneElement(children, {voronoiClipData: voronoiClipData, isAnimating: isAnimating})} 
+                    </PageTransition>
+                }
+            </Background>
+        </div>
     </React.Fragment>
 }
 

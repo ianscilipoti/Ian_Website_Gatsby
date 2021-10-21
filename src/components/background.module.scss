@@ -1,12 +1,12 @@
 
 .voronoiBackground
 {
-    position: absolute;
+    position: fixed;
     width:100%;
-    height:calc(100vh - 56px);
+    // height:calc(100vh - 56px);
+    // height:100vh;
     overflow-x: hidden;
     pointer-events: none;
-    
 }
 
 .voronoiForeground
