@@ -9,7 +9,7 @@ import {boundingBoxSize, boundingBoxPadding, headerHeightPx, minPageHeight} from
 //consts
 const bbox = {xl: -boundingBoxPadding, xr: boundingBoxSize + boundingBoxPadding, yt: 0, yb: boundingBoxSize};
 const selectedHighlightMovement = 170;
-const animationCutoff = 0.3;
+const animationCutoff = 0.1;
 const dampening = 5.5;
 const verticalStackBreakpoint = 750;
 
@@ -149,18 +149,20 @@ const Background1 = (props) =>
 
                     const minHeightScaler = Math.min((dimensions.height / minPageHeight), 1);
                     const minHeightOffset = (1 - minHeightScaler) * boundingBoxSize * 0.5;
+                    const viewBoxWidthPx = Math.max(minPageHeight, dimensions.height) + headerHeightPx;//box is a square that fits the 
+                    const widthScaler = Math.min(dimensions.width / viewBoxWidthPx, 1);
 
                     //arrange group url areas to fill entire screen. All other areas drop down
                     if (isWithinUrlGroup)
                     {
                         
-                        if (dimensions.width > verticalStackBreakpoint)
+                        if (dimensions.width/dimensions.height > 1)
                         {
                             
                             newDesiredPositions.push(
                                 {
-                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize,
-                                    y: invLerp(groupBounds.minY - padding, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize * minHeightScaler + minHeightOffset
+                                    x: ((invLerp(groupBounds.minX - padding*2, groupBounds.maxX + padding*2, thisAreaData.x)-0.5)*widthScaler + 0.5)*boundingBoxSize,
+                                    y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding*2, thisAreaData.y)*boundingBoxSize * minHeightScaler + minHeightOffset
                                 }
                             );    
                         }
@@ -169,10 +171,10 @@ const Background1 = (props) =>
                             if(!isBackgroundPoly)
                             {
                                 
-                                const rowHeight = (boundingBoxSize/(numWithinGroup+1))*minHeightScaler;
+                                const rowHeight = ((boundingBoxSize)/(numWithinGroup+1))*minHeightScaler;
                                 newDesiredPositions.push({
                                     //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
-                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.05 + 0.95*((groupBounds.minX + groupBounds.maxX)/2),
+                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0 + 1*((groupBounds.minX + groupBounds.maxX)/2),
                                     y: (numSeenWithinGroup+1)*rowHeight + minHeightOffset
                                 });
                             }
@@ -361,7 +363,7 @@ const Background1 = (props) =>
                 <VoronoiPolygon key={cell.site.url} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
             )}
         </div>
-        {/* strokes. Could improve performance here probably*/}
+        {/* strokes. Could improve performance here probably */}
         <div className={voronoiBackground} style={{zIndex:2, height:(dimensions.height - headerHeightPx)}}>
             
             {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>

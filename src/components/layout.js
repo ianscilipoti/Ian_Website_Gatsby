@@ -3,6 +3,7 @@ import Header from './header'
 import Background from './background'
 import PageTransition from '../components/pageTransition'
 import '../common/common.module.scss'
+import {wrapper} from '../common/safariLayoutFix.module.scss'
 
 
 const Layout = ({ children, location }) => {
@@ -13,7 +14,7 @@ const Layout = ({ children, location }) => {
         setLatestKey(location.key);
     }
 
-    return <React.Fragment>
+    return <div className={wrapper}>
         <Header />
         <div style={{marginTop:"56px"}}>
             <Background animationFinished={animationFinished}>
@@ -24,7 +25,7 @@ const Layout = ({ children, location }) => {
                 }
             </Background>
         </div>
-    </React.Fragment>
+    </div>
 }
 
 export default Layout

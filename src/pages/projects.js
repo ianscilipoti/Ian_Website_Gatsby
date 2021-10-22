@@ -31,7 +31,6 @@ const ProjectsPage = (props) => {
               x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
               y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
             }}/>
-            {/* <div style={{backgroundColor:cols[i], width:"100%", height:"100%"}}/> */}
         </ClipToCell>
       )}
 

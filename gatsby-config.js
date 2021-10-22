@@ -56,7 +56,7 @@ module.exports = {
         y:80,
         // color: "#2c4d8f",
         color: "#738070",
-        selectedHighlightMovementOverride:95
+        selectedHighlightMovementOverride:115
       }, 
       {
         url: "/contact",

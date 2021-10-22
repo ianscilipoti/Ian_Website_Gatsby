@@ -2,27 +2,27 @@
 title: cities
 description: A procedural city generator
 previewImg: preview.png
-backgroundImg: background1.png
+backgroundImg: background.png
 x: 95
 y: 5
 color: "#c3c7c9"
 ---
 The city generator is my most recent large-scale project. The project was inspired by my interest in procedural content. In particular, the question of just how rich and detailed can procedurally generated content be?
 
-![Full City](fullCity1.png "A top down view of a city with placeholder buildings.")
+![Full City](fullCity.jpg "A top down view of a city with placeholder buildings.")
 
 THE DATA STRUCTURE / ALGORITHM
 --------
 
 The city data structure strongly resembles structures used to represent meshes in 3D modeling programs. Essentially, the structure is a set of city regions (polygons) formed by a set of edges. Regions share edges and edges know which regions they border. Regions can be classified as parks, town squares, blocks... a city itself even! Additionally, city regions may be made of a set of smaller city regions. This is one of the main concepts that differentiates the data structure from a standard mesh.
 
-![A view of lowest level city regions.](datastructure.png)
-
 The city generation process is a recursive subdivision. Starting with the city border polygon, each city region is subdivided by a randomly chosen subdivision pattern. The regions formed following the subdivision are given a classification (parks, blocks, etc). 
+
+![Multiple Subdivision levels](subdivision.jpg)
 
 Choices regarding parks and block layouts made early on heavily influence the overall layout. For example, parks don't get subdivided further, but city blocks do. Subdivision continues until a park is reached or a region is subdivided to the level of individual plots for houses. 
 
-![Multiple Subdivision levels](subdivision.png)
+
 
 This recursive structure allows for detailed layouts to be programmed. For example, high level regions can be assigned qualities such has socioeconomic status, business vs residential, etc. These properties can be used to decide what types of road structures, parks, etc will be chosen in future subdivisions.   
 
@@ -33,5 +33,5 @@ CONCLUSIONS
 
 I believe the versatility of the recursive subdivision approach could be used to create very detailed immersive environments. In the future, I would love to explore creating procedural 3D models to represent buildings. That is the subject for a whole separate project, however.
 
-![Road View](roadview.png "A view from a road near a park")
+![Road View](roadview.jpg "A view from a road near a park")
 
