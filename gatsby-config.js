@@ -66,14 +66,14 @@ module.exports = {
         selectedHighlightMovementOverride:85,
         createPolygon: true
       }, 
-      // {
-      //   url: "/projects",
-      //   x:40, 
-      //   y:-5,
-      //   color: "#c5e1e8",
-      //   selectedHighlightMovementOverride:120,
-      //   createPolygon: false, 
-      // },
+      {
+        url: "/404",
+        x:50,
+        y:150,
+        color: "#9c231a",
+        selectedHighlightMovementOverride:150,
+        createPolygon: true
+      }, 
       {
         url: "-bg1", 
         x:76, 
@@ -90,32 +90,8 @@ module.exports = {
         url: "-bg3", 
         x:0, 
         y:80,
-        color: "#5e6e46",
+        color: "#3f613c",
       },
-      // {
-      //   url: "/projects/-bg1", 
-      //   x:-30, 
-      //   y:-15,
-      //   color: "#5e6e46",
-      // },
-      // {
-      //   url: "/projects/-bg2", 
-      //   x:175, 
-      //   y:-5,
-      //   color: "#5e6e46",
-      // },
-      // {
-      //   identifier: "bg2", 
-      //   x:120, 
-      //   y:30,
-      //   color: "#21254a",
-      // },
-      // {
-      //   identifier: "bg3", 
-      //   x:5, 
-      //   y:35,
-      //   color: "#252652",
-      // }
     ]
   }
 }
