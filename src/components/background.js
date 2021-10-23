@@ -94,6 +94,7 @@ const Background1 = (props) =>
             width: window.innerWidth
         })
         }
+        // handleResize();
         window.addEventListener('resize', handleResize)
 
         return _ => {
@@ -307,9 +308,9 @@ const Background1 = (props) =>
      //get the index of the voronoiArea object of the current page
     const getVoronoiAreaInfo = () =>
     {
-         const pthnm = location.pathname;
-         const safePathname = pthnm.substr(-1) === "/" && pthnm.length>1  ? pthnm.slice(0, -1) : pthnm;
-        
+        const pthnm = location.pathname;
+        const safePathname = pthnm.substr(-1) === "/" && pthnm.length>1  ? pthnm.slice(0, -1) : pthnm;
+        let ind404;
          for(let i = 0; i < voronoiAreas.length; i ++)
          {
              const voronoiArea = voronoiAreas[i];
@@ -318,6 +319,10 @@ const Background1 = (props) =>
              {
                  return {type: "area", index: i};
              } 
+             else if (voronoiArea.url == "/404")
+             {
+                ind404 = i;
+             }
          }
          //check to see if this is a page group
          const pageGroups = voronoiInfoQuery.allSite.edges[0].node.siteMetadata.pageGroups;
@@ -331,8 +336,8 @@ const Background1 = (props) =>
 
          }
 
-         console.error("page indentifier invalid");
-         return {type: "error", index: -1};
+         console.error("page indentifier invalid: ", pthnm);
+         return {type: "area", index: ind404};
     }
 
     const recalculateDiagram = () =>
@@ -358,18 +363,22 @@ const Background1 = (props) =>
     return <React.Fragment>
         {recalculateDiagram()}
         {/* color backgrounds */}
-        <div className={voronoiBackground} style={{zIndex:-1, height:(dimensions.height - headerHeightPx)}}>
-            {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={cell.site.url} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
-            )}
-        </div>
-        {/* strokes. Could improve performance here probably */}
-        <div className={voronoiBackground} style={{zIndex:2, height:(dimensions.height - headerHeightPx)}}>
-            
-            {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
-                <VoronoiPolygon key={i} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />
-            )}
-        </div>
+        
+        { typeof window === "undefined" ? <></> : <React.Fragment>
+            <div className={voronoiBackground} style={{zIndex:-1, height:(dimensions.height - headerHeightPx)}}>
+                {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
+                    <VoronoiPolygon key={cell.site.url} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={false} hasContent={isCellVisible(cell)}/>
+                )}
+            </div>
+            {/* strokes. Could improve performance here probably */}
+            <div className={voronoiBackground} style={{zIndex:2, height:(dimensions.height - headerHeightPx)}}>
+                
+                {diagram.current.cells.filter(cell => isValidCell(cell)).map((cell, i) =>
+                    <VoronoiPolygon key={i} id={cell.site.url} allData={cell} isAnimating={isAnimating} renderStrokeOnly={true} />
+                )}
+            </div>
+        </React.Fragment>
+        }
         {/* pass the cells down to be used for clipping / animations */}
         {props.children(diagram.current.cells, isAnimating)}
     </React.Fragment>

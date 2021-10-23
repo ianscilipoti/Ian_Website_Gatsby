@@ -118,14 +118,14 @@ const IndexPage = (props) => {
 
           <p className={textBlock} style={isLg > sm ? {width:"90%", marginRight:"auto"} : {}}>
             <span className={highlight}>My passion </span> lies in the intersection of 
-            creativitiy and technology. At heart, my work is a consequence of my drive to learn and explore. 
+            creativity and technology. At heart, my work is a consequence of my drive to learn and explore. 
           </p>
 
           {!isLg && <ResizableCarousel height={300} projectData={projectData}/>}
 
           <p className={textBlock} style={isLg ? {width:"90%", marginRight:"auto", marginLeft:"15px"} : {}}>
-            <span className={highlight}>Please explore </span> the projects outlined on this website.
-            These projects began with a fascination in specific technologies and grew into the creative visually oriented projects I describe on this site. 
+            <span className={highlight}>Please explore </span> the projects outlined on this website. Many of my projects are related to computer graphics and procedural content generation. 
+            
           </p>
 
           
