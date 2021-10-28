@@ -47,7 +47,7 @@ const ContentPage = (props) => {
     const markdownRemark = props.data.markdownRemark;
     return <React.Fragment>
         <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === `/${markdownRemark.fields.directory}/${markdownRemark.fields.slug}`)}>
-            <PageBackground imgSrc={markdownRemark.frontmatter.backgroundImg} offset={-scrollPos/6} blur={5} opacity={0.3}/>
+            <PageBackground imgSrc={markdownRemark.frontmatter.backgroundImg} offset={-scrollPos/6} blur={5} opacity={0.2}/>
         </ClipToCell>
 
         <PageLayout parentPage="projects" pageName={markdownRemark.frontmatter.title} >
