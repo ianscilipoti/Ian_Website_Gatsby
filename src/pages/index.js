@@ -10,10 +10,6 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import ClipToCell from '../components/clipToCell'
 import {sm} from '../common/common.js'
-import bg from './indexbg5.jpg'
-
-import {svgPolygon, voronoiBackground} from '../common/common.module.scss'
-import VoronoiPolygon from "../components/voronoiPolygon";
 
 const ResizableCarousel = (props) => {
   const projectData = props.projectData;
@@ -87,6 +83,7 @@ const IndexPage = (props) => {
         }
         function handleScroll(event) {
           setScrollPos(window.scrollY);
+          
         }
         window.addEventListener('resize', handleResize)
         window.addEventListener('scroll', handleScroll)
@@ -101,13 +98,9 @@ const IndexPage = (props) => {
 
   return <React.Fragment>
     <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === "/")}>
-      <PageBackground imgSrc={projectData.file} opacity={0.08} blur={5} offset={-scrollPos/6}/>
+      <PageBackground imgSrc={projectData.file} opacity={0.08} blur={5} offset={-scrollPos/6} scale={150}/>
     </ClipToCell>
 
-    {/* <div className={voronoiBackground} style={{zIndex:-1}}>
-      <VoronoiPolygon id={"indeximg"} allData={props.voronoiClipData.find(cell => cell.site.url === "/")} isAnimating={props.isAnimating} renderStrokeOnly={false} hasContent={true} img={bg}/>
-    </div> */}
-    
     <PageLayout pageName="WELCOME" textColor={"white"} >
       
       <Row sm={1} md={2} xs={1}>

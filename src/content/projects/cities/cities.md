@@ -7,14 +7,14 @@ x: 95
 y: 5
 color: "#c3c7c9"
 ---
-The city generator is my most recent large-scale project. The project was inspired by my interest in procedural content. In particular, the question of just how rich and detailed can procedurally generated content be?
+The city generator is my most recent large-scale project. The project is part of an ongoing mission of mine to create interesting content and worlds procedurally. In particular, this project had a data structures focus.
 
 ![Full City](fullCity.jpg "A top down view of a city with placeholder buildings.")
 
 THE DATA STRUCTURE / ALGORITHM
 --------
 
-The city data structure strongly resembles structures used to represent meshes in 3D modeling programs. Essentially, the structure is a set of city regions (polygons) formed by a set of edges. Regions share edges and edges know which regions they border. Regions can be classified as parks, town squares, blocks... a city itself even! Additionally, city regions may be made of a set of smaller city regions. This is one of the main concepts that differentiates the data structure from a standard mesh.
+The city data structure strongly resembles that used to represent meshes in 3D modeling programs. Essentially, the structure is a set of city regions (polygons) formed by a set of edges. Regions share edges and edges know which regions they border. Regions can be classified as parks, town squares, blocks... a city itself even! Additionally, city regions may be made of a set of smaller city regions. This is one of the main concepts that differentiates the data structure from a standard mesh.
 
 The city generation process is a recursive subdivision. Starting with the city border polygon, each city region is subdivided by a randomly chosen subdivision pattern. The regions formed following the subdivision are given a classification (parks, blocks, etc). 
 

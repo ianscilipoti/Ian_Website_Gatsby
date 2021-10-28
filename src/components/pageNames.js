@@ -22,7 +22,7 @@ const PageNames = (props) =>
         }
     })
       
-    return <div className={page}>
+    return <React.Fragment>
         {props.voronoiData.filter(cell => cell.site.backgroundImg).map((cell) => {
             const xPx = voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height);
             const yPx = voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height);
@@ -30,7 +30,7 @@ const PageNames = (props) =>
     
             return <h2 key={cell.site.color} style={positionStyle}>{cell.site.title.toUpperCase()}</h2>
         })}
-    </div>
+    </React.Fragment>
 }
 
 export default PageNames
