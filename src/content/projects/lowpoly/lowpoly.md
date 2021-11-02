@@ -1,6 +1,6 @@
 ---
-title: Terrain
-description: A procedural terrain generator and low poly terrain engine
+title: Terrain Engine
+description: A procedural terrain generator and low poly terrain engine.
 previewImg: preview.png
 backgroundImg: background.png
 x: 0

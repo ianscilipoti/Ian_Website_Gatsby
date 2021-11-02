@@ -1,6 +1,6 @@
 ---
-title: painter
-description: A painting algorithm
+title: Painter
+description: An automatic painting algorithm.
 previewImg: preview.png
 backgroundImg: background.png
 x: 50

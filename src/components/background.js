@@ -146,7 +146,7 @@ const Background1 = (props) =>
                     const thisAreaData = voronoiAreas[i];
                     const isWithinUrlGroup = urlWithinGroup(thisAreaData.url, currentPageInfo.urlGroup);
                     const isBackgroundPoly = thisAreaData.url.includes("-");
-                    const padding = 5;
+                    const padding = 15;
 
                     const minHeightScaler = Math.min((dimensions.height / minPageHeight), 1);
                     const minHeightOffset = (1 - minHeightScaler) * boundingBoxSize * 0.5;
@@ -157,25 +157,25 @@ const Background1 = (props) =>
                     if (isWithinUrlGroup)
                     {
                         
-                        if (dimensions.width/dimensions.height > 1)
-                        {
-                            
+                        if (dimensions.width/dimensions.height > 1.3)
+                        {  
+                            //normal layout
                             newDesiredPositions.push(
                                 {
-                                    x: ((invLerp(groupBounds.minX - padding*2, groupBounds.maxX + padding*2, thisAreaData.x)-0.5)*widthScaler + 0.5)*boundingBoxSize,
-                                    y: invLerp(groupBounds.minY - padding*2, groupBounds.maxY + padding*2, thisAreaData.y)*boundingBoxSize * minHeightScaler + minHeightOffset
+                                    x: ((invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)-0.5)*widthScaler + 0.5)*boundingBoxSize,
+                                    y: invLerp(groupBounds.minY - padding, groupBounds.maxY + padding, thisAreaData.y)*boundingBoxSize * minHeightScaler + minHeightOffset
                                 }
                             );    
                         }
                         else
-                        {
+                        {//vertical lahout
                             if(!isBackgroundPoly)
                             {
                                 
                                 const rowHeight = ((boundingBoxSize)/(numWithinGroup+1))*minHeightScaler;
                                 newDesiredPositions.push({
                                     //for x do a weighted avg of the original position in the bounding box and the center pt to give it more style
-                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0 + 1*((groupBounds.minX + groupBounds.maxX)/2),
+                                    x: invLerp(groupBounds.minX - padding, groupBounds.maxX + padding, thisAreaData.x)*boundingBoxSize*0.02 + 0.98*((groupBounds.minX + groupBounds.maxX)/2),
                                     y: (numSeenWithinGroup+1)*rowHeight + minHeightOffset
                                 });
                             }
@@ -293,10 +293,8 @@ const Background1 = (props) =>
             {
                 animationRequestRef.current = window.requestAnimationFrame(updateCanvas);
             }
-            //window.requestAnimationFrame(updateCanvas);
         }
         recalculateDesiredVoronoiPositions();
-        console.log("recalculating desired pos");
         tryStartUpdateLoop();
 
         return () => { 

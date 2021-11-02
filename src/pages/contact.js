@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import ClipToCell from '../components/clipToCell'
 import {sm} from '../common/common.js'
+import {Helmet} from 'react-helmet'
 
 
 const ContactPage = (props) => {
@@ -49,6 +50,11 @@ const ContactPage = (props) => {
   </div>;
 
   return <React.Fragment>
+
+    <Helmet>
+      <title>Contact Me</title>
+      <meta name="description" content="Email me with questions or inquiries." />
+    </Helmet>
     
     <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === "/contact")}>
       <PageBackground imgSrc={backgroundImage.file} blur={5} opacity={0.15}/>

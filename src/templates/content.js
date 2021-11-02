@@ -4,6 +4,7 @@ import { graphql, Link } from 'gatsby'
 import {basicLink} from '../common/common.module.scss'
 import PageBackground from '../components/pageBackground'
 import ClipToCell from '../components/clipToCell'
+import {Helmet} from 'react-helmet'
 
 
 
@@ -12,6 +13,7 @@ export const query = graphql`
         markdownRemark(fields: {slug: { eq: $slug}}) {
             frontmatter {
                 title
+                description
                 backgroundImg {
                     childImageSharp {
                         fixed(width: 1000, quality: 90) {
@@ -46,6 +48,10 @@ const ContentPage = (props) => {
     })
     const markdownRemark = props.data.markdownRemark;
     return <React.Fragment>
+        <Helmet>
+            <title>{markdownRemark.frontmatter.title}</title>
+            <meta name="description" content={markdownRemark.frontmatter.description} />
+        </Helmet>
         <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === `/${markdownRemark.fields.directory}/${markdownRemark.fields.slug}`)}>
             <PageBackground imgSrc={markdownRemark.frontmatter.backgroundImg} offset={-scrollPos/6} blur={5} opacity={0.2}/>
         </ClipToCell>

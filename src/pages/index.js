@@ -10,6 +10,7 @@ import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
 import ClipToCell from '../components/clipToCell'
 import {sm} from '../common/common.js'
+import {Helmet} from 'react-helmet'
 
 const ResizableCarousel = (props) => {
   const projectData = props.projectData;
@@ -97,6 +98,12 @@ const IndexPage = (props) => {
   const isLg = dimensions.width > sm;
 
   return <React.Fragment>
+
+    <Helmet>
+      <title>About Ian Scilipoti</title>
+      <meta name="description" content="Ian is a developer interested in procedural content and emerging tech." />
+    </Helmet>
+
     <ClipToCell cell={props.voronoiClipData.find(cell => cell.site.url === "/")}>
       <PageBackground imgSrc={projectData.file} opacity={0.08} blur={5} offset={-scrollPos/6} scale={150}/>
     </ClipToCell>

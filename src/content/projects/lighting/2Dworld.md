@@ -1,6 +1,6 @@
 ---
-title: 2Dworld
-description: A 2D lighting and engine
+title: 2D World
+description: A 2D lighting and terrain engine.
 previewImg: preview.png
 backgroundImg: background1.png
 x: 90

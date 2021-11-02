@@ -3,6 +3,7 @@ import PageNames from '../components/pageNames'
 import ClipToCell from '../components/clipToCell'
 import PageBackground from '../components/pageBackground'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
+import {Helmet} from 'react-helmet'
 
 const ProjectsPage = (props) => {
   const [dimensions, setDimensions] = React.useState(typeof window !== "undefined" ? 
@@ -25,6 +26,11 @@ const ProjectsPage = (props) => {
   // const cols = ["red", "green", "yellow", "blue", "purple", "orange", "cyan"];
 
   return <React.Fragment>
+    <Helmet>
+      <title>Projects</title>
+      <meta name="description" content="Read about Ian's work and personal projects." />
+    </Helmet>
+
       {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map((cell, i) => 
         <ClipToCell key={cell.site.url} cell={cell}>
           <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.35} blur={1} centerPt={{

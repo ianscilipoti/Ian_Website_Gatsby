@@ -1,10 +1,10 @@
 ---
-title: effects
-description: Special effects in Unity3D
+title: Special Effects
+description: Special effects on the Unity3D Asset Store.
 previewImg: preview.png
 backgroundImg: background1.png
-x: 15
-y: 5
+x: 5
+y: 2
 color: "#93c2b0"
 ---
 Since 2013, I have maintained an online business selling special effects through the Unity3D asset store. My work consists of packs of effects of various catagories. Below I will outline the work currently available on the Asset Store.  

@@ -1,6 +1,6 @@
 ---
-title: cities
-description: A procedural city generator
+title: Cities
+description: A procedural city generator.
 previewImg: preview.png
 backgroundImg: background.png
 x: 95
