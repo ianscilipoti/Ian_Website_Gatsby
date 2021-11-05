@@ -33,7 +33,7 @@ const ResizableCarousel = (props) => {
 const IndexPage = (props) => {
   const projectData = useStaticQuery(graphql`
     query {
-      allMarkdownRemark {
+      allMarkdownRemark(sort: {fields: frontmatter___order}) {
         edges {
           node {
             frontmatter {

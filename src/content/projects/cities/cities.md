@@ -6,6 +6,7 @@ backgroundImg: background.png
 x: 95
 y: 5
 color: "#c3c7c9"
+order: 1
 ---
 The city generator is my most recent large-scale project. The project is part of an ongoing mission of mine to create interesting content and worlds procedurally. In particular, this project had a data structures focus.
 

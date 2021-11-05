@@ -33,7 +33,7 @@ const ProjectsPage = (props) => {
 
       {props.voronoiClipData.filter(cell => cell.site.url.startsWith("/projects")).map((cell, i) => 
         <ClipToCell key={cell.site.url} cell={cell}>
-          <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.35} blur={1} centerPt={{
+          <PageBackground imgSrc={cell.site.backgroundImg} opacity={0.35} scale={70} blur={1} centerPt={{
               x:voronoiCoordToPixelX(cell.site.x, dimensions.width, dimensions.height), 
               y:voronoiCoordToPixelY(cell.site.y, dimensions.width, dimensions.height)
             }}/>
