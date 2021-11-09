@@ -12,7 +12,7 @@ const PageBackground = (props) =>
         // width: "100%",//props.centerPt ? "100%" : "100%",
         height: props.centerPt ? "auto" : "100%",
         width:`${props.scale}%`,
-        maxWidth:"700px",
+        maxWidth: props.centerPt ? "700px" : "none",
         opacity: props.opacity,
         position:"absolute",
         top: props.centerPt ? `${props.centerPt.y}px` : `${props.offset}px`, 
