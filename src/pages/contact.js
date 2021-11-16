@@ -50,7 +50,7 @@ const ContactPage = (props) => {
   </div>;
 
   const resumeBottomHTML = <div style={{textAlign:"center", margin:"20px 0"}}>
-    <a className={`${emailButton} ${buttonBase}`} target="_blank" rel="noopener noreferrer" href="/IanScilipotiResume.pdf">Ian's Resume</a>
+    <a className={`${emailButton} ${buttonBase}`} target="_blank" rel="noopener noreferrer" href="/Resume.pdf">Ian's Resume</a>
   </div>;
 
   return <React.Fragment>
