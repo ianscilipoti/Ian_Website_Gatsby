@@ -49,6 +49,10 @@ const ContactPage = (props) => {
     <a className={`${emailButton} ${buttonBase}`} href="mailto:ianscilipoti@gmail.com">Send me an email!</a>
   </div>;
 
+  const resumeBottomHTML = <div style={{textAlign:"center", margin:"20px 0"}}>
+    <a className={`${emailButton} ${buttonBase}`} target="_blank" rel="noopener noreferrer" href="/IanScilipotiResume.pdf">Ian's Resume</a>
+  </div>;
+
   return <React.Fragment>
 
     <Helmet>
@@ -63,7 +67,9 @@ const ContactPage = (props) => {
       
       <Row sm={2} md={2} xs={1}>
         <Col style={{textAlign:"center"}}>
-          <p style={{position:"relative", top:"50%", transform:"translateY(-50%)", marginBottom:"20px", fontSize:"100%"}}>If you have any questions about what you see here or business inquiries feel free to reach out. </p>
+          <p style={{position:"relative", top:"50%", transform:"translateY(-50%)", marginBottom:"20px", fontSize:"100%"}}>
+            If you have any questions about what you see here or business inquiries feel free to reach out. 
+          </p>
           {/* {isLg && bottomHTML} */}
         </Col>
       
@@ -72,7 +78,15 @@ const ContactPage = (props) => {
         </Col>
       </Row>
       {/* <br/> */}
-      {bottomHTML}
+      
+      <Row sm={2} md={2} xs={1}>
+      <Col>
+        {bottomHTML}
+      </Col>
+      <Col>
+        {resumeBottomHTML}
+      </Col>
+      </Row>
     </PageLayout>
   </React.Fragment>
 }
