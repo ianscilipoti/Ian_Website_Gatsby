@@ -1,6 +1,5 @@
 import React from 'react'
 import {voronoiCoordToPixelX, voronoiCoordToPixelY} from '../common/common.js'
-import {page} from '../common/common.module.scss'
 
 const PageNames = (props) => 
 {

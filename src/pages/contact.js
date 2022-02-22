@@ -31,7 +31,6 @@ const ContactPage = (props) => {
           window.removeEventListener('resize', handleResize)
       }
   })
-  const isLg = dimensions.width > sm;
   const backgroundImage = useStaticQuery(graphql`
     query {
       file(relativePath: {eq: "pages/contactbg.jpg"}) {

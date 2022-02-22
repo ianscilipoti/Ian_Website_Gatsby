@@ -68,6 +68,15 @@ module.exports = {
         createPolygon: true
       }, 
       {
+        url: "/demoreel",
+        x:20,
+        y:50,
+        //color: "#ad6a4b",
+        color: "#2b1c14",
+        selectedHighlightMovementOverride:85,
+        createPolygon: true
+      },
+      {
         url: "/404",
         x:50,
         y:150,
