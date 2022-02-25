@@ -4,7 +4,7 @@ description: VR terrain sculpting research
 previewImg: preview.png
 backgroundImg: background.png
 x: 50
-y: 15
+y: 20
 color: "#a89bc9"
 order: 2
 ---
